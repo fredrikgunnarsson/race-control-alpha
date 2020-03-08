@@ -60,7 +60,7 @@
         background: #1F7A8C;
         padding: 35px 40px;
         margin: 40px;
-        font-size: 30px;
+        font-size: 1.9rem;
         font-weight: 700;
         color: white;
         text-align: center;
@@ -76,7 +76,7 @@
         line-height: 44px;
         color: white;
         text-align: center;
-        font-size: 21px;
+        font-size: 1.3rem;
         background: #033B4B;
     }
     .preview-screen-wrapper {
@@ -97,7 +97,7 @@
         background: white;
         display: flex;
         height: 225px;
-        font-size: 4vw;
+        font-size: 4.5rem;
         font-weight: 700;
         justify-content: center;
         align-items: center;
@@ -132,7 +132,7 @@
         position: absolute;
         right: 25%;
         top: 50%;
-        font-size: 35px;
+        font-size: 2.2rem;
         text-align: center;
         line-height: 71px;
         transform: translate(50%,-50%);
@@ -213,6 +213,20 @@
     }
     .flag-oil {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 8 6'%3E%3Cpath d='M0,0h8v6H0z' fill='%23ff0'/%3E%3Cpath d='M1,0v6h1V0h1v6h1V0h1v6h1V0h1v6h1V0z' fill='%23f00'/%3E%3C/svg%3E");
+    }
+
+    @media(max-width:1138px) {
+        .preview-screen-wrapper {
+            grid-template-columns: 400px;
+        }
+
+        .select-flag-wrapper {
+            grid-template-columns: repeat(3,180px);
+        }
+
+        .preview-screen, .preview-screen-number {
+            height: 150px;
+        }
     }
 </style>
 
