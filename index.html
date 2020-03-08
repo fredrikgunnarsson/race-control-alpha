@@ -63,7 +63,6 @@
         font-size: 30px;
         font-weight: 700;
         color: white;
-        border-radius: 8px;
         text-align: center;
         cursor: pointer;
     }
@@ -83,12 +82,12 @@
     .preview-screen-wrapper {
         display: grid;
         position: relative;
-        grid-template-columns: 1.9fr 3fr;
-        margin: 120px 30px 3vw 30px;
+        grid-template-columns: 600px;
+        margin: 80px auto 30px auto;
     }
     .preview-screen {
         background: gray;
-        height: calc(31.4vw*0.44);
+        height: 225px;
         cursor: pointer;
         background-position: center;
         background-size: cover;
@@ -97,7 +96,7 @@
     .preview-screen-number {
         background: white;
         display: flex;
-        height: calc(31.4vw*0.44);
+        height: 225px;
         font-size: 4vw;
         font-weight: 700;
         justify-content: center;
@@ -108,10 +107,10 @@
     }
     .select-flag-wrapper {
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-        grid-auto-rows: calc(22.8vw * 0.56);
-        margin: 3vw 30px;
-        grid-gap: 3vw;
+        grid-template-columns: repeat(5,180px);
+        grid-auto-rows: 140px;
+        margin: 30px auto;
+        grid-gap: 50px;
     }
     .select-flag {
         position: relative;
@@ -126,16 +125,16 @@
     }
     .choose-number-btn {
         display:none;
-        width: 6vw;
-        height: 6vw;
+        width: 75px;
+        height: 75px;
         background: #1F7A8C;
         color: white;
         position: absolute;
         right: 25%;
         top: 50%;
-        font-size: 2.5vw;
+        font-size: 35px;
         text-align: center;
-        line-height: 5.7vw;
+        line-height: 71px;
         transform: translate(50%,-50%);
         border-radius: 50%;
         box-shadow: 5px 5px 13px -7px #11414b;
@@ -164,7 +163,7 @@
     }
     .enter-number-modal input {
         font-size: 3rem;
-        padding: 3vh;
+        padding: 40px;
         text-align: center;
         border: 0px;
         width: 370px;
