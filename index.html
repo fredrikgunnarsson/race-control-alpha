@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Test Socket IO</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        margin:0px;
+        padding:0px;
+        font-family:Verdana, Geneva, Tahoma, sans-serif;
+        background:black;
+    }
+    #screen-name {
+        z-index: 9999;
+        position: fixed;
+        color:yellow
+    }
+    #welcome-screen {
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #control-screen {
+        display:none;
+        min-height: 100vh;
+        width: 100%;
+        grid-template-rows: auto 3fr;
+    }
+    #flag-screen {
+        display:none;
+        height: 100vh;
+        width: 100%;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr calc(50vw * .754) 1fr;
+    }
+    .flag-display {
+        background-size:cover;
+        grid-row: 2;
+        border: 5px solid;
+    }
+    .number-display {
+        display: flex;
+        background: white;
+        grid-row: 2;
+        border: 5px solid;
+        font-size: 16vw;
+        justify-content: center;
+        align-items: center;
+    }
+    .welcome-btn {
+        background: #1F7A8C;
+        padding: 35px 40px;
+        margin: 40px;
+        font-size: 30px;
+        font-weight: 700;
+        color: white;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+    }
+    .welcome-btn:hover {
+        opacity:.7
+    }
+    .clock {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        line-height: 44px;
+        color: white;
+        text-align: center;
+        font-size: 21px;
+        background: #033B4B;
+    }
+    .preview-screen-wrapper {
+        display: grid;
+        position: relative;
+        grid-template-columns: 1.9fr 3fr;
+        margin: 120px 30px 3vw 30px;
+    }
+    .preview-screen {
+        background: gray;
+        height: calc(31.4vw*0.44);
+        cursor: pointer;
+        background-position: center;
+        background-size: cover;
+        width:100%;
+    }
+    .preview-screen-number {
+        background: white;
+        display: flex;
+        height: calc(31.4vw*0.44);
+        font-size: 4vw;
+        font-weight: 700;
+        justify-content: center;
+        align-items: center;
+        border-left: 3px solid black;
+        cursor: pointer;
+        width:100%
+    }
+    .select-flag-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-auto-rows: calc(22.8vw * 0.56);
+        margin: 3vw 30px;
+        grid-gap: 3vw;
+    }
+    .select-flag {
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: gray;
+        cursor: pointer;
+    }
+    .select-flag:hover, .preview-screen:hover {
+        opacity:.7;
+    }
+    .choose-number-btn {
+        display:none;
+        width: 6vw;
+        height: 6vw;
+        background: #1F7A8C;
+        color: white;
+        position: absolute;
+        right: 25%;
+        top: 50%;
+        font-size: 2.5vw;
+        text-align: center;
+        line-height: 5.7vw;
+        transform: translate(50%,-50%);
+        border-radius: 50%;
+        box-shadow: 5px 5px 13px -7px #11414b;
+        cursor: pointer;
+        opacity: .9;
+    }
+    .selected .choose-number-btn {
+        display:initial;
+    }
+    .choose-number-btn:hover {
+        opacity:1;
+    }
+    .enter-number-modal {
+        background: rgba(0,0,0,.8);
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        left: 0;
+        right: 0;
+        margin: auto;
+        z-index: 2;
+    }
+    .enter-number-modal input {
+        font-size: 3rem;
+        padding: 3vh;
+        text-align: center;
+        border: 0px;
+        width: 370px;
+        color: #333;
+    }
+    .enter-number-modal input[type=button] {
+        cursor: pointer;
+        font-size:2rem;
+        font-weight: 700;
+        opacity:.4;
+    }
+    .selected {
+        box-shadow:0 0 0 5px rgba(251,176,59,1)
+    }
+
+
+
+    .flag-chequered {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 7'%3E%3Cpath d='M0,0H9V7H0' fill='%23322c24'/%3E%3Cpath stroke='%23fff' stroke-dasharray='1' d='M1,.5h7M0,1.5h9M1,2.5h7M0,3.5h9M1,4.5h7M0,5.5h9M1,6.5h7'/%3E%3C/svg%3E");
+    }
+    .flag-green {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' width='800' height='600'%3E%3Crect fill='%2300cc00' x='0' y='0' width='800' height='600'/%3E%3C/svg%3E");
+    }
+    .flag-yellow {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' version='1.1'%3E%3Crect width='800' height='600' fill='%23ff0'/%3E%3C/svg%3E");
+    }
+    .flag-black {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Cpath d='M0,0h4v3H0' fill='%23322c24'/%3E%3C/svg%3E");
+    }
+    .flag-orange-circle {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.0' x='0' y='0' width='800' height='600' id='svg602' xml:space='preserve'%3E%3Cdefs id='defs604'/%3E%3Crect width='800' height='600' x='0' y='0' style='font-size:12;fill-rule:evenodd;stroke-width:0;' id='rectblack'/%3E%3Crect width='800' height='600' x='0' y='0' style='font-size:12;fill:none;fill-rule:evenodd;stroke:%23000000;stroke-width:1.25;' id='rectblackoutline'/%3E%3Cellipse cx='400' cy='300' rx='165.110565' ry='165.110565' transform='matrix(1.223214,0,0,1.223214,-89.28573,-66.96426)' style='font-size:12;fill:%23ff8800;fill-rule:evenodd;stroke-width:1;' id='circleorange'/%3E%3C/svg%3E");
+    }
+    .flag-black-white-diagonal {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Cpath d='M0,0H4V3H0' fill='%23fff'/%3E%3Cpath d='M4,0H0V3' fill='%23322c24'/%3E%3C/svg%3E");
+    }
+    .flag-white-cross {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.0' x='0' y='0' width='800' height='600' id='svg602' xml:space='preserve'%3E%3Cdefs id='defs604'/%3E%3Crect width='800' height='600' x='0' y='0' style='font-size:12;fill-rule:evenodd;stroke-width:0;' id='rectblack'/%3E%3Cpath d='M 0 0 L 100 0 L 800 500 L 800 600 L 700 600 L 0 100 L 0 0 z ' style='font-size:12;fill:%23ffffff;fill-rule:evenodd;stroke-width:1;' id='crossbarneg'/%3E%3Cpath d='M 0 600 L 100 600 L 800 100 L 800 0 L 700 0 L 0 500 L 0 600 z ' style='font-size:12;fill:%23ffffff;fill-rule:evenodd;stroke-width:1;' id='crossbarpos'/%3E%3Crect width='800' height='600' x='0' y='0' style='font-size:12;fill:none;fill-rule:evenodd;stroke:%23000000;stroke-width:1.25;' id='rectblackoutline'/%3E%3C/svg%3E");
+    }
+    .flag-blue {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Cpath d='M0,0h800v600H0z' fill='%2300f'/%3E%3Cpath d='M0,585.5L800,14.5' fill='none' stroke='%23ff0' stroke-width='139' stroke-linecap='square'/%3E%3Cpath d='M0,0h800v600H0z' fill='none' stroke='%23000' stroke-width='1'/%3E%3C/svg%3E");
+    }
+    .flag-red {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Cpath d='M0,0h4v3H0' fill='%23f5002f'/%3E%3C/svg%3E");
+    }
+    .flag-white {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Cpath d='M0,0h4v3H0' fill='%23fff'/%3E%3C/svg%3E");
+    }
+    .flag-oil {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 8 6'%3E%3Cpath d='M0,0h8v6H0z' fill='%23ff0'/%3E%3Cpath d='M1,0v6h1V0h1v6h1V0h1v6h1V0h1v6h1V0z' fill='%23f00'/%3E%3C/svg%3E");
+    }
+</style>
+
+<!--
+    ========= HTML========== 
+ -->
+
+<body>
+    <div id="screen-name"></div>
+
+    <div id="welcome-screen">
+        <div class="clock">
+            <span class="clock-time">Getting time...</span>
+        </div>
+        <div data-btn="welcome-btn" data-role="control" class="welcome-btn">Control screen</div>
+        <div data-btn="welcome-btn" data-role="flag" class="welcome-btn">Flag screen</div>
+    </div>
+
+    <div id="control-screen">
+        <div class="clock">
+            <span class="clock-time">Getting time...</span>
+        </div>
+        <div class="enter-number-modal" data-btn="close-modal-btn">
+            <input type="text" id="enter-number" placeholder="enter number"/>
+            <input type="button" id="submit-number" value="OK" data-btn="submit-number">
+        </div>
+        <div class="preview-screen-wrapper">
+            <div style="display:flex">
+                <div class="preview-screen"></div>
+                <div class="preview-screen-number"></div>
+            </div>
+        </div>
+        <div class="select-flag-wrapper">
+       </div>
+    </div>
+
+    <div id="flag-screen">
+        <div class="flag-display"></div>
+        <div class="number-display">5</div>
+    </div>
+
+<!--     
+    ============ JAVASCRIPT =============
+ -->
+
+    <script>
+
+        // ===============================
+        // INITIALIZATIONS
+        // ===============================
+
+        let socket=io();
+        const flagsSchema = [
+            {name:'flag-chequered'},
+            {name:'flag-green'},
+            {name:'flag-yellow'},
+            {name:'flag-black'},
+            {name:'flag-orange-circle'},
+            {name:'flag-black-white-diagonal'},
+            {name:'flag-white-cross'},
+            {name:'flag-blue'},
+            {name:'flag-red'},
+            {name:'flag-white'},
+            {name:'flag-oil'},
+        ]
+        let clientScreen = {
+            role:'welcome',
+            flags:[],
+        }
+
+        let flagNumber=''
+        let carouselIdxFlag = 0;
+        let carouselIdxPreview = 0;
+
+        const screenNameElement = document.querySelector('#screen-name');
+        const welcomeScreenElement = document.querySelector('#welcome-screen');
+        const controlScreenElement = document.querySelector('#control-screen');
+        const flagScreenElement = document.querySelector('#flag-screen');
+        const clockBannerElement = document.querySelectorAll('.clock');
+        const selectFlagWrapperElement = document.querySelector('.select-flag-wrapper');
+        const previewScreenElement = document.querySelector('.preview-screen');
+        const previewScreenNumberElement = document.querySelector('.preview-screen-number');
+        const flagDisplayElement = document.querySelector('.flag-display');
+        const numberDisplayElement = document.querySelector('.number-display');
+        const enterNumberModalElement = document.querySelector('.enter-number-modal');
+        const enterNumberInput = document.querySelector('#enter-number');
+        const submitNumberBtn = document.querySelector('#submit-number');
+
+        // ===============================
+        // EVENT LISTENERS
+        // ===============================
+
+        document.addEventListener('click', (e)=>{
+            if(e.target.dataset.btn=='select-flag') {
+                let clickedFlag = e.target.dataset.flag;
+                socket.emit('selectFlag', clickedFlag)
+            }
+            else if(e.target.dataset.btn=='welcome-btn') {
+                welcomeBtnClick(e.target.dataset.role);
+            }
+            else if(e.target.dataset.btn=='choose-number-btn') {
+                enterNumberModalElement.style.display='flex';
+                submitNumberBtn.style.opacity='.4'
+                enterNumberInput.focus();
+                flagNumber=e.target.dataset.flag;
+                // console.log('set number', e.target.dataset.flag);
+            }
+            else if(e.target.dataset.btn=='close-modal-btn') {
+                closeNumberModal();
+            }
+            else if(e.target.dataset.btn=='submit-number') {
+                (enterNumberInput.value.length > 0) 
+                    ? closeNumberModal(true) 
+                    : closeNumberModal();
+            }
+            else {
+                console.log(e);
+            }
+
+        })
+
+        document.addEventListener('keyup', (e)=>{
+            if(e.keyCode == 13 && enterNumberModalElement.style.display == 'flex') {
+                (enterNumberInput.value.length > 0) 
+                    ? closeNumberModal(true) 
+                    : closeNumberModal();
+            } else if (enterNumberModalElement.style.display == 'flex' && enterNumberInput.value.length == 0) {
+                submitNumberBtn.style.opacity='.4'
+            } else if (enterNumberModalElement.style.display == 'flex' && enterNumberInput.value.length > 0) {
+                submitNumberBtn.style.opacity='1';
+            }
+            else {
+                console.log(e);
+            }
+        })
+
+        function closeNumberModal(submit) {
+            if (submit) {
+                socket.emit('selectNumber',{flag:flagNumber, number:enterNumberInput.value})
+                console.log(`submit number ${enterNumberInput.value} to ${flagNumber}`)
+            }
+            enterNumberModalElement.style.display='none';
+            enterNumberInput.value='';
+            flagNumber='';
+        }
+
+        // ===============================
+        // SOCKETS
+        // ===============================
+
+        socket.on('connect',()=>{
+            clientScreen.id=socket.id;
+            screenNameElement.innerHTML=socket.id;
+        })
+        socket.on('checkClientScreen',()=>{
+            socket.emit('clientScreenInfo',{id:socket.id, screen:clientScreen});
+        })
+        socket.on('updateClient',({screens,flags})=>{
+            clientScreen = screens.filter(el=>el.id==socket.id)[0];
+            clientScreen.flags = flags;
+            drawControlScreen();
+        })
+        
+        // ===============================
+        // MAIN FUNCTIONS
+        // ===============================
+
+        function welcomeBtnClick(role) {
+            welcomeScreenElement.style.display="none";
+
+            if (role=='flag') {
+                startFlagCarousel();
+                flagScreenElement.style.display="grid";
+            } else if (role=='control') {
+                selectFlagWrapperElement.innerHTML=generateSelectFlags();
+                startPreviewCarousel();
+                controlScreenElement.style.display="grid";
+            }
+
+            socket.emit('selectScreenRole', {id:socket.id,role:role});
+        }
+
+        function drawControlScreen() {
+            const allSelectFlagsElements = document.querySelectorAll('.select-flag.selected');
+            
+            if (clientScreen.role == 'control') {
+                allSelectFlagsElements.forEach(el=>el.classList.remove('selected'));
+                
+                if (clientScreen.flags.length > 0) {
+                    clientScreen.flags.forEach(el => {
+                        document.querySelector(`.select-flag.${el.flag}`).classList.add('selected');
+                    });
+                } else {
+                    // previewScreenElement.innerHTML=`no active flag screens`;
+                }
+            }
+        }
+
+        // ===============================
+        // HELPER FUNCTIONS
+        // ===============================
+
+        function startFlagCarousel() {
+            if (clientScreen.flags.length > 0) {
+                (carouselIdxFlag + 1 > clientScreen.flags.length - 1) ? carouselIdxFlag=0 : carouselIdxFlag++;
+                flagDisplayElement.className=`flag-display flag ${clientScreen.flags[carouselIdxFlag].flag}`;
+                numberDisplayElement.innerText = clientScreen.flags[carouselIdxFlag].number;
+            } else {
+                flagDisplayElement.className=`flag-display`;
+                numberDisplayElement.innerText = ''
+            }
+            setTimeout(startFlagCarousel, 1000);
+        }
+
+        function startPreviewCarousel() {
+            if (clientScreen.flags.length > 0) {
+                (carouselIdxPreview + 1 > clientScreen.flags.length - 1) ? carouselIdxPreview=0 : carouselIdxPreview++;
+                previewScreenElement.className=`preview-screen flag ${clientScreen.flags[carouselIdxPreview].flag}`;
+                previewScreenNumberElement.innerText = clientScreen.flags[carouselIdxPreview].number;
+            } else {
+                previewScreenElement.className=`preview-screen`;
+                previewScreenNumberElement.innerText = ''
+            }
+            setTimeout(startPreviewCarousel, 1000);
+        }
+
+        // function startPreviewCarousel() {
+        //     let selectedFlags = document.querySelectorAll('.select-flag.selected');
+            
+        //     if (selectedFlags.length>0) {
+        //         (carouselIdxPreview + 1 > selectedFlags.length - 1) ? carouselIdxPreview=0 : carouselIdxPreview++;
+        //         previewScreenElement.className=`preview-screen ${selectedFlags[carouselIdxPreview].dataset.flag}`;                        
+        //     } else {
+        //         previewScreenElement.className='preview-screen';
+        //     }
+        //     setTimeout(startPreviewCarousel, 1000);
+        // }
+
+        function generateSelectFlags() {
+            let flagHTML='';
+            flagsSchema.forEach(flag => {
+                flagHTML+=`
+                <div 
+                    data-btn="select-flag" 
+                    data-flag="${flag.name}" 
+                    class="select-flag flag ${flag.name}"
+                >
+                    <div data-btn="choose-number-btn" data-flag="${flag.name}" class="choose-number-btn">✎</div>
+                </div>`
+            });
+            return flagHTML;
+        }
+
+        setInterval(() => {
+            clockBannerElement.forEach(el=>{
+                el.innerHTML=Date().slice(0,24)
+            })
+        }, 1000);
+
+    </script>
+
+
+</body>
+</html>
