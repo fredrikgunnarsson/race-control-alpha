@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Kontrollskärm</title>
+    <link rel="stylesheet" href="../style.css">
+    
+    <script src="../socket.io/socket.io.js"></script>
+</head>
+<style>
+
+</style>
+
+<body>
+    <div id="screen-name"></div>
+
+    <div id="control-screen">
+        <div class="clock">
+            <span class="clock-time">Getting time...</span>
+        </div>
+        <div class="enter-number-modal" data-btn="close-modal-btn">
+            <input type="text" id="enter-number" placeholder="enter number"/>
+            <input type="button" id="submit-number" value="OK" data-btn="submit-number">
+        </div>
+        <div class="screens-wrapper">
+            <div class="preview-screen-wrapper">
+                <div class="btn section-screen" data-btn="section-btn" data-section="0">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">0</div>
+                </div>
+            </div>
+            <div class="section-screens-wrapper">
+                <div class="btn section-screen" data-btn="section-btn" data-section="1">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">1</div>
+                </div>
+                <div class="btn section-screen" data-btn="section-btn" data-section="2">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">2</div>
+                </div>
+                <div class="btn section-screen" data-btn="section-btn" data-section="3">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">3</div>
+                </div>
+                <div class="btn section-screen" data-btn="section-btn" data-section="4">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">4</div>
+                </div>
+                <div class="btn section-screen" data-btn="section-btn" data-section="5">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">5</div>
+                </div>
+                <div class="btn section-screen" data-btn="section-btn" data-section="6">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">6</div>
+                </div>
+                <div class="btn section-screen" data-btn="section-btn" data-section="7">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">7</div>
+                </div>
+                <div class="btn section-screen" data-btn="section-btn" data-section="8">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">8</div>
+                </div>
+                <div class="btn section-screen" data-btn="section-btn" data-section="9">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">9</div>
+                </div>
+                <div class="btn section-screen" data-btn="section-btn" data-section="10">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">10</div>
+                </div>
+                <div class="btn section-screen" data-btn="section-btn" data-section="11">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">11</div>
+                </div>
+                <div class="btn section-screen" data-btn="section-btn" data-section="12">
+                    <div class="carNum">CarNo</div>
+                    <div class="sectorLabel">12</div>
+                </div>
+            </div>
+            <div class="race-functions-wrapper">
+                <div class="btn race-function-btn">Startljus</div>
+                <div class="btn race-function-btn">Övrig info</div>
+                <div class="btn race-function-btn">Parametrar</div>
+            </div>
+        </div>
+        <div class="select-flag-wrapper">
+       </div>
+    </div>
+
+    <script src="../kontroll.js"></script>
+</body>
+</html>
