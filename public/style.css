@@ -192,9 +192,9 @@ a:active {
     cursor: pointer;
     opacity: .9;
 }
-.selected .choose-number-btn {
+/* .selected .choose-number-btn {
     display:initial;
-}
+} */
 .choose-number-btn:hover {
     opacity:1;
 }
