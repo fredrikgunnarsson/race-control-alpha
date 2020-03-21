@@ -252,8 +252,9 @@ io.on('connection', socket => {
             let idx = el.clients.indexOf(socket.id);
             if (idx > -1) {
                 el.clients.splice(idx,1);
+                io.emit('showToast',{msg:`Skärm bortkopplad (sektion: ${el.section})`,color:'red'})
                 if (el.clients.length==0) {
-                    console.log('last screen gone...')
+                    io.emit('showToast',{msg:`alla skärmar för sektion ${el.section} bortkopplade`,color:'red'})
                     el.active=false;
                     el.flags=[]
                 }
@@ -278,7 +279,10 @@ io.on('connection', socket => {
     })
     socket.on('selectFlag2',(clickedFlag)=>{
         let activeScreen = screens2.filter(el=>el.active)[0];
-        if (!activeScreen) return console.log('...no active screen');
+        if (!activeScreen) {
+            io.emit('showToast', {msg:"Ingen sektion vald. Klicka på en sektion.", color:"orange"});
+            return null;
+        }
         let doExist = activeScreen.flags.indexOf(clickedFlag);
         (doExist < 0) 
             ? activeScreen.flags.push(clickedFlag) 
@@ -296,6 +300,7 @@ io.on('connection', socket => {
     socket.on('sectionUpdate',({section})=>{
         let idx = screens2.findIndex(el=>el.section==section);
         if (idx>-1) screens2[idx].clients.push(socket.id);
+        io.emit('showToast',{msg:`ny skärm (sektion: ${section})`})
     })
     socket.on('clickSection',({section})=>{
         let clickedSection = screens2.filter(el=>el.section==section)[0]
@@ -306,6 +311,8 @@ io.on('connection', socket => {
         if (isOnline) {
             activeSections.forEach(el => el.active=false)
             clickedSection.active ^= true
+        } else {
+            io.emit('showToast',{msg:`Ingen skärm uppkopplad för sektion ${clickedSection.section}`,color:'orange'})
         }
         console.log(section, ` isActive:${isActive}  isOnline:${isOnline}... ${JSON.stringify(clickedSection)}`)
         updateClient()
