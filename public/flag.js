@@ -70,7 +70,11 @@
             if(thisSection && thisSection.flags.length < 1) {
                 displayDiv.className="flag-display";
             } else {
-                displayDiv.className=`flag-display flag ${thisSection.flags[carouselCounter % thisSection.flags.length]}`;
+                let alternatingFlag = thisSection.flags[carouselCounter % thisSection.flags.length];
+                displayDiv.className=`
+                    flag-display flag ${alternatingFlag.name}
+                    ${(alternatingFlag.blink) ? 'blink-animation': ''}
+                `;
             }
 
             carouselCounter++;

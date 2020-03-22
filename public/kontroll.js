@@ -119,7 +119,8 @@ function drawControlScreen() {
     
     if (activeSection && activeSection.flags.length > 0) {
         activeSection.flags.forEach(flag => {
-            document.querySelector(`.select-flag.${flag}`).classList.add('selected');
+            console.log(flag);
+            document.querySelector(`.select-flag.${flag.name}`).classList.add('selected');
         });
     } else {
         // previewScreenElement.innerHTML=`no active flag screens`;
@@ -170,7 +171,11 @@ function startPreviewCarousel() {
         if(screen.clients.length < 1 || screen.flags.length < 1) {
             screenDiv.className="btn section-screen";
         } else {
-            screenDiv.className=`btn section-screen flag ${screen.flags[carouselIdxPreview % screen.flags.length]}`
+            let thisScreen = screen.flags[carouselIdxPreview % screen.flags.length];
+            screenDiv.className=`
+                btn section-screen flag ${thisScreen.name}
+                ${(thisScreen.blink) ? 'blink-animation' : ''}
+            `
         }
         if(screen.active) screenDiv.classList.add('selected');
     })

@@ -279,7 +279,7 @@ io.on('connection', socket => {
     // })
     socket.on('selectFlag2',({clickedFlag,blink})=>{
         let flagAttributes = flagsSchema.find(flag => flag.name==clickedFlag);
-        let selectedScreen = screens2.filter(el=>el.active)[0];
+        let selectedScreen = screens2.find(el=>el.active);
 
         if (!selectedScreen) {
             showToast('Ingen sektion vald. Klicka på en sektion','orange');
@@ -291,7 +291,7 @@ io.on('connection', socket => {
             if (!isFlagSelected()) {
                 screens2
                 .filter(screen => screen.clients.length > 0)
-                .forEach(screen => screen.flags=[clickedFlag]);
+                .forEach(screen => screen.flags=[{name:clickedFlag,blink:blink}]);
             } else {
                 screens2
                 .filter(screen => screen.clients.length > 0)
@@ -310,15 +310,19 @@ io.on('connection', socket => {
         }
 
         function isFlagSelected() { 
-            return (selectedScreen.flags.indexOf(clickedFlag) < 0) ? false : true;
+            return (selectedScreen.flags.findIndex(flag=>flag.name == clickedFlag) < 0) ? false : true;
         }
         function toggleFlagSelection() {
-            let flagArrayIndex= selectedScreen.flags.indexOf(clickedFlag);
+            let flagArrayIndex= selectedScreen.flags.findIndex(flag=>flag.name == clickedFlag);
+            console.log(selectedScreen.flags);
+            
+            console.log(flagArrayIndex);
+            
 
             if (isFlagSelected()) {
                 selectedScreen.flags.splice(flagArrayIndex,1)
             } else {
-                selectedScreen.flags.push(clickedFlag);
+                selectedScreen.flags.push({name:clickedFlag,blink:blink});
             }
         }
        
