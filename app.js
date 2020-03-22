@@ -314,10 +314,6 @@ io.on('connection', socket => {
         }
         function toggleFlagSelection() {
             let flagArrayIndex= selectedScreen.flags.findIndex(flag=>flag.name == clickedFlag);
-            console.log(selectedScreen.flags);
-            
-            console.log(flagArrayIndex);
-            
 
             if (isFlagSelected()) {
                 selectedScreen.flags.splice(flagArrayIndex,1)
@@ -325,8 +321,6 @@ io.on('connection', socket => {
                 selectedScreen.flags.push({name:clickedFlag,blink:blink});
             }
         }
-       
-        // console.log(clickedFlag, ` isActive:${isActive}  isOnline:${isOnline}... ${JSON.stringify(clickedSection)}`)
         updateClient();
     })
     // socket.on('selectNumber',({flag, number})=>{
@@ -353,7 +347,7 @@ io.on('connection', socket => {
         } else {
             showToast(`Ingen skärm uppkopplad för sektion ${clickedSection.section}`,'orange')
         }
-        console.log(section, ` isActive:${isActive}  isOnline:${isOnline}... ${JSON.stringify(clickedSection)}`)
+        // console.log(section, ` isActive:${isActive}  isOnline:${isOnline}... ${JSON.stringify(clickedSection)}`)
         updateClient()
     })
 
@@ -375,7 +369,6 @@ function showToast(msg, color) {
 
 setInterval(() => {
     console.log('...');
-    
 }, 1000);
 
 

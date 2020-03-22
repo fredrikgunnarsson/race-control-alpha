@@ -115,12 +115,12 @@ function drawControlScreen() {
     let activeSection = serverState.filter(el=>el.active)[0]
     const allSelectFlagsElements = document.querySelectorAll('.select-flag.selected');
 
-    allSelectFlagsElements.forEach(el=>el.classList.remove('selected'));
+    allSelectFlagsElements.forEach(el=>el.classList.remove('selected','blinkActive'));
     
     if (activeSection && activeSection.flags.length > 0) {
         activeSection.flags.forEach(flag => {
-            console.log(flag);
-            document.querySelector(`.select-flag.${flag.name}`).classList.add('selected');
+            document.querySelector(`.select-flag.${flag.name}`)
+                .classList.add('selected', (flag.blink) ? 'blinkActive' : null);
         });
     } else {
         // previewScreenElement.innerHTML=`no active flag screens`;
@@ -133,7 +133,7 @@ function drawControlScreen() {
             : sectionEl.style.opacity='.2';
         (el.active)
             ? sectionEl.classList.add('selected')
-            : sectionEl.classList.remove('selected')
+            : sectionEl.classList.remove('selected');
     })
 }
 
@@ -216,7 +216,7 @@ function showToast(msg,color) {
 
 setInterval(() => {
     clockBannerElement.forEach(el=>{
-        el.innerText=Date().slice(0,24)
+        el.innerText=Date().slice(16,24)
     })
 }, 1000);
 

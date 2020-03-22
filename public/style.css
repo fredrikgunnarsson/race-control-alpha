@@ -8,7 +8,7 @@ body {
     margin:0px;
     padding:0px;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
-    background:black;
+    background:#ddd;
 }
 a, a:visited {
     color:var(--primaryColor);
@@ -82,11 +82,14 @@ a:active {
     position: fixed;
     top: 0;
     width: 100%;
-    line-height: 44px;
+    line-height: 3rem;
     color: white;
     text-align: center;
     font-size: 1.3rem;
-    background: #033B4B;
+    background: #333;
+    font-weight: 500;
+    opacity: .9;
+    z-index: 9;
 }
 .screens-wrapper {
     display: grid;
@@ -170,9 +173,10 @@ a:active {
     background-repeat: no-repeat;
     background-color: gray;
     cursor: pointer;
+    transition:.2s ease-in-out;
 }
 .select-flag:hover, .preview-screen:hover {
-    opacity:.7;
+    transform:scale(1.1);
 }
 .blink {
     display:none;
@@ -200,6 +204,10 @@ a:active {
 .blink:hover {
     transform: translate(50%,-50%) scale(1.15);
     opacity: 1;
+}
+.blinkActive .blink {
+    background: #fd9b01;
+    color: white;
 }
 .blink-animation {
     animation: blink .5s;
@@ -258,7 +266,7 @@ a:active {
     opacity:.4;
 } */
 .selected {
-    box-shadow:0 0 0 5px rgba(251,176,59,1)
+    box-shadow:0 0 0 8px rgb(255, 155, 0), 7px 7px 12px 10px rgba(97, 58, 0, 0.6);
 }
 .toast {
     position: fixed;
@@ -276,6 +284,7 @@ a:active {
     animation: toast ease-in-out 2.5s;
     animation-iteration-count: 1;
     animation-fill-mode:forwards;
+    z-index:9999;
 }
 
 
