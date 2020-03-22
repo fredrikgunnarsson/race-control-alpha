@@ -62,7 +62,7 @@
 
         function startFlagCarousel() {
 
-            setTimeout(startFlagCarousel, 1000);
+            setTimeout(startFlagCarousel, 1700);
 
             let thisSection = serverState.find(el=>el.section==section);
             let displayDiv = document.querySelector('.flag-display');
@@ -75,6 +75,9 @@
                     flag-display flag ${alternatingFlag.name}
                     ${(alternatingFlag.blink) ? 'blink-animation': ''}
                 `;
+                //refactor this
+                console.log(thisSection)
+                displayDiv.children[0].innerText = (alternatingFlag.number) ? alternatingFlag.number : '' ;
             }
 
             carouselCounter++;

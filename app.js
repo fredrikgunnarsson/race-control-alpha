@@ -277,7 +277,7 @@ io.on('connection', socket => {
     //     }
     //     updateClient();
     // })
-    socket.on('selectFlag2',({clickedFlag,blink})=>{
+    socket.on('selectFlag2',({clickedFlag,blink,number})=>{
         let flagAttributes = flagsSchema.find(flag => flag.name==clickedFlag);
         let selectedScreen = screens2.find(el=>el.active);
 
@@ -291,7 +291,7 @@ io.on('connection', socket => {
             if (!isFlagSelected()) {
                 screens2
                 .filter(screen => screen.clients.length > 0)
-                .forEach(screen => screen.flags=[{name:clickedFlag,blink:blink}]);
+                .forEach(screen => screen.flags=[{name:clickedFlag,blink:blink,number:number}]);
             } else {
                 screens2
                 .filter(screen => screen.clients.length > 0)
@@ -318,7 +318,7 @@ io.on('connection', socket => {
             if (isFlagSelected()) {
                 selectedScreen.flags.splice(flagArrayIndex,1)
             } else {
-                selectedScreen.flags.push({name:clickedFlag,blink:blink});
+                selectedScreen.flags.push({name:clickedFlag,blink:blink,number:number});
             }
         }
         updateClient();

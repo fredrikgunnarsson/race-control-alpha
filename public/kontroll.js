@@ -44,27 +44,26 @@ document.addEventListener('click', (e)=>{
         let flag = e.target.dataset.flag;
         socket.emit('selectFlag2', {clickedFlag:flag,blink:false} )
     }
+    else if (e.target.dataset.btn=='select-num-flag') {
+        let flag = e.target.dataset.flag;
+        let numEl = document.querySelector('.car-number-input input');
+        let isSelected = [...e.target.classList].includes('selected');
+
+        if (numEl.value > 0 || isSelected) {
+            socket.emit('selectFlag2', {clickedFlag:flag,blink:false,number:numEl.value})
+            numEl.value=null;
+        } else {
+            showToast('Inget nummer. Fyll i nummer!','red');
+        }
+        // socket.emit('selectFlag2', {clickedFlag:flag,blink:true})
+    }
     else if (e.target.dataset.btn=='blink-btn') {
         let flag = e.target.parentElement.dataset.flag;
         socket.emit('selectFlag2', {clickedFlag:flag,blink:true})
     }
-    // else if(e.target.dataset.btn=='choose-number-btn') {
-    //     enterNumberModalElement.style.display='flex';
-    //     submitNumberBtn.style.opacity='.4'
-    //     enterNumberInput.focus();
-    //     flagNumber=e.target.dataset.flag;
-    // }
     else if(e.target.dataset.btn=='section-btn') {
         clickSection(e);
     }
-    // else if(e.target.dataset.btn=='close-modal-btn') {
-    //     closeNumberModal();
-    // }
-    // else if(e.target.dataset.btn=='submit-number') {
-    //     (enterNumberInput.value.length > 0) 
-    //         ? closeNumberModal(true) 
-    //         : closeNumberModal();
-    // }
     else {
         // console.log(e);
     }
@@ -85,18 +84,6 @@ document.addEventListener('click', (e)=>{
 //         console.log(e);
 //     }
 // })
-
-// function closeNumberModal(submit) {
-//     if (submit) {
-//         socket.emit('selectNumber',{flag:flagNumber, number:enterNumberInput.value})
-//         console.log(`submit number ${enterNumberInput.value} to ${flagNumber}`)
-//     }
-//     enterNumberModalElement.style.display='none';
-//     enterNumberInput.value='';
-//     flagNumber='';
-// }
-
-
 
 
 // ===============================
@@ -165,7 +152,7 @@ function initiateSockets() {
 // ===============================
 
 function startPreviewCarousel() {
-    setTimeout(startPreviewCarousel, 1000);
+    setTimeout(startPreviewCarousel, 1700);
     serverState.forEach(screen => {
         let screenDiv = document.querySelector(`[data-section="${screen.section}"]`);
         if(screen.clients.length < 1 || screen.flags.length < 1) {
@@ -174,8 +161,9 @@ function startPreviewCarousel() {
             let thisScreen = screen.flags[carouselIdxPreview % screen.flags.length];
             screenDiv.className=`
                 btn section-screen flag ${thisScreen.name}
-                ${(thisScreen.blink) ? 'blink-animation' : ''}
-            `
+                ${(thisScreen.blink) ? 'blink-animation' : ''}`;
+            // refactor this
+            screenDiv.children[0].innerText = (thisScreen.number) ? thisScreen.number : '' ;
         }
         if(screen.active) screenDiv.classList.add('selected');
     })
@@ -188,16 +176,18 @@ function generateSelectFlags() {
     flagsSchema.forEach(flag => {
         flagHTML+=`
         <div 
-            data-btn="select-flag" 
+            data-btn="${(flag.needNumber) ? 'select-num-flag' : 'select-flag'}" 
             data-flag="${flag.name}" 
             class="select-flag flag ${flag.name}"
         >
             <div 
+                class="${(flag.needNumber) ? 'need-number' : null}"
+            ></div>
+            <div 
                 data-btn="blink-btn" 
                 data-flag="${flag.name}" 
                 class="blink ${(flag.canBlink) ? 'can-blink': ''}"
-            >☼
-            </div>
+            >☼</div>
         </div>`
     });
     return flagHTML;
