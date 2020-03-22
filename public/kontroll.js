@@ -41,56 +41,60 @@ const submitNumberBtn = document.querySelector('#submit-number');
 
 document.addEventListener('click', (e)=>{
     if(e.target.dataset.btn=='select-flag') {
-        let clickedFlag = e.target.dataset.flag;
-        socket.emit('selectFlag2', clickedFlag)
+        let flag = e.target.dataset.flag;
+        socket.emit('selectFlag2', {clickedFlag:flag,blink:false} )
     }
-    else if(e.target.dataset.btn=='choose-number-btn') {
-        enterNumberModalElement.style.display='flex';
-        submitNumberBtn.style.opacity='.4'
-        enterNumberInput.focus();
-        flagNumber=e.target.dataset.flag;
+    else if (e.target.dataset.btn=='blink-btn') {
+        let flag = e.target.parentElement.dataset.flag;
+        socket.emit('selectFlag2', {clickedFlag:flag,blink:true})
     }
+    // else if(e.target.dataset.btn=='choose-number-btn') {
+    //     enterNumberModalElement.style.display='flex';
+    //     submitNumberBtn.style.opacity='.4'
+    //     enterNumberInput.focus();
+    //     flagNumber=e.target.dataset.flag;
+    // }
     else if(e.target.dataset.btn=='section-btn') {
         clickSection(e);
     }
-    else if(e.target.dataset.btn=='close-modal-btn') {
-        closeNumberModal();
-    }
-    else if(e.target.dataset.btn=='submit-number') {
-        (enterNumberInput.value.length > 0) 
-            ? closeNumberModal(true) 
-            : closeNumberModal();
-    }
+    // else if(e.target.dataset.btn=='close-modal-btn') {
+    //     closeNumberModal();
+    // }
+    // else if(e.target.dataset.btn=='submit-number') {
+    //     (enterNumberInput.value.length > 0) 
+    //         ? closeNumberModal(true) 
+    //         : closeNumberModal();
+    // }
     else {
-        console.log(e);
+        // console.log(e);
     }
 
 })
 
-document.addEventListener('keyup', (e)=>{
-    if(e.keyCode == 13 && enterNumberModalElement.style.display == 'flex') {
-        (enterNumberInput.value.length > 0) 
-            ? closeNumberModal(true) 
-            : closeNumberModal();
-    } else if (enterNumberModalElement.style.display == 'flex' && enterNumberInput.value.length == 0) {
-        submitNumberBtn.style.opacity='.4'
-    } else if (enterNumberModalElement.style.display == 'flex' && enterNumberInput.value.length > 0) {
-        submitNumberBtn.style.opacity='1';
-    }
-    else {
-        console.log(e);
-    }
-})
+// document.addEventListener('keyup', (e)=>{
+//     if(e.keyCode == 13 && enterNumberModalElement.style.display == 'flex') {
+//         (enterNumberInput.value.length > 0) 
+//             ? closeNumberModal(true) 
+//             : closeNumberModal();
+//     } else if (enterNumberModalElement.style.display == 'flex' && enterNumberInput.value.length == 0) {
+//         submitNumberBtn.style.opacity='.4'
+//     } else if (enterNumberModalElement.style.display == 'flex' && enterNumberInput.value.length > 0) {
+//         submitNumberBtn.style.opacity='1';
+//     }
+//     else {
+//         console.log(e);
+//     }
+// })
 
-function closeNumberModal(submit) {
-    if (submit) {
-        socket.emit('selectNumber',{flag:flagNumber, number:enterNumberInput.value})
-        console.log(`submit number ${enterNumberInput.value} to ${flagNumber}`)
-    }
-    enterNumberModalElement.style.display='none';
-    enterNumberInput.value='';
-    flagNumber='';
-}
+// function closeNumberModal(submit) {
+//     if (submit) {
+//         socket.emit('selectNumber',{flag:flagNumber, number:enterNumberInput.value})
+//         console.log(`submit number ${enterNumberInput.value} to ${flagNumber}`)
+//     }
+//     enterNumberModalElement.style.display='none';
+//     enterNumberInput.value='';
+//     flagNumber='';
+// }
 
 
 
@@ -145,12 +149,12 @@ function initiateSockets() {
         screenNameElement.innerHTML='server disconnected!!!';
     })
     socket.on('updateClient',({screens,flags,screens2})=>{
-        console.log('updateClient...');
+        // console.log('updateClient...');
         serverState=screens2;
         drawControlScreen();
     })
     socket.on('showToast', ({msg, color})=>{
-        console.log('toast?')
+        // console.log('toast?')
         showToast(msg,color);
     })
 }
@@ -160,7 +164,7 @@ function initiateSockets() {
 // ===============================
 
 function startPreviewCarousel() {
-    setTimeout(startPreviewCarousel, 3000);
+    setTimeout(startPreviewCarousel, 1000);
     serverState.forEach(screen => {
         let screenDiv = document.querySelector(`[data-section="${screen.section}"]`);
         if(screen.clients.length < 1 || screen.flags.length < 1) {
@@ -183,7 +187,12 @@ function generateSelectFlags() {
             data-flag="${flag.name}" 
             class="select-flag flag ${flag.name}"
         >
-            <div data-btn="choose-number-btn" data-flag="${flag.name}" class="choose-number-btn">✎</div>
+            <div 
+                data-btn="blink-btn" 
+                data-flag="${flag.name}" 
+                class="blink ${(flag.canBlink) ? 'can-blink': ''}"
+            >☼
+            </div>
         </div>`
     });
     return flagHTML;
@@ -202,7 +211,7 @@ function showToast(msg,color) {
 
 setInterval(() => {
     clockBannerElement.forEach(el=>{
-        el.innerHTML=Date().slice(0,24)
+        el.innerText=Date().slice(0,24)
     })
-}, 100);
+}, 1000);
 

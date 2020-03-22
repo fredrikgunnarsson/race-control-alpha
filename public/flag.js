@@ -62,7 +62,7 @@
 
         function startFlagCarousel() {
 
-            setTimeout(startFlagCarousel, 3000);
+            setTimeout(startFlagCarousel, 1000);
 
             let thisSection = serverState.find(el=>el.section==section);
             let displayDiv = document.querySelector('.flag-display');

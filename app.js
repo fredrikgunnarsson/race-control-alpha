@@ -252,9 +252,9 @@ io.on('connection', socket => {
             let idx = el.clients.indexOf(socket.id);
             if (idx > -1) {
                 el.clients.splice(idx,1);
-                io.emit('showToast',{msg:`Skärm bortkopplad (sektion: ${el.section})`,color:'red'})
+                showToast(`Skärm bortkopplad (sektion: ${el.section})`,'red');
                 if (el.clients.length==0) {
-                    io.emit('showToast',{msg:`alla skärmar för sektion ${el.section} bortkopplade`,color:'red'})
+                    showToast(`alla skärmar för sektion ${el.section} bortkopplade`,'red');
                     el.active=false;
                     el.flags=[]
                 }
@@ -268,39 +268,74 @@ io.on('connection', socket => {
         screens[idx] = screen
         updateClient()
     })
-    socket.on('selectFlag',(clickedFlag)=>{
-        let idx = flags.findIndex(el => el.flag==clickedFlag);
-        if (idx > -1) {
-            flags.splice(idx,1)
-        } else {
-            flags.push({flag:clickedFlag, number:null});
-        }
-        updateClient();
-    })
-    socket.on('selectFlag2',(clickedFlag)=>{
-        let activeScreen = screens2.filter(el=>el.active)[0];
-        if (!activeScreen) {
-            io.emit('showToast', {msg:"Ingen sektion vald. Klicka på en sektion.", color:"orange"});
+    // socket.on('selectFlag',(clickedFlag)=>{
+    //     let idx = flags.findIndex(el => el.flag==clickedFlag);
+    //     if (idx > -1) {
+    //         flags.splice(idx,1)
+    //     } else {
+    //         flags.push({flag:clickedFlag, number:null});
+    //     }
+    //     updateClient();
+    // })
+    socket.on('selectFlag2',({clickedFlag,blink})=>{
+        let flagAttributes = flagsSchema.find(flag => flag.name==clickedFlag);
+        let selectedScreen = screens2.filter(el=>el.active)[0];
+
+        if (!selectedScreen) {
+            showToast('Ingen sektion vald. Klicka på en sektion','orange');
             return null;
         }
-        let doExist = activeScreen.flags.indexOf(clickedFlag);
-        (doExist < 0) 
-            ? activeScreen.flags.push(clickedFlag) 
-            : activeScreen.flags.splice(doExist,1);
+
+        
+        if (flagAttributes.allScreen) {
+            if (!isFlagSelected()) {
+                screens2
+                .filter(screen => screen.clients.length > 0)
+                .forEach(screen => screen.flags=[clickedFlag]);
+            } else {
+                screens2
+                .filter(screen => screen.clients.length > 0)
+                .forEach(screen => screen.flags=[]);
+            }
+        }
+        else if (selectedScreen.flags.length > 1) {
+            if (isFlagSelected() || flagAttributes.pause) {
+                toggleFlagSelection()
+            } else {
+                showToast('Max två flaggor tillåtna', 'red');
+                return null;
+            } 
+        } else {
+            toggleFlagSelection();
+        }
+
+        function isFlagSelected() { 
+            return (selectedScreen.flags.indexOf(clickedFlag) < 0) ? false : true;
+        }
+        function toggleFlagSelection() {
+            let flagArrayIndex= selectedScreen.flags.indexOf(clickedFlag);
+
+            if (isFlagSelected()) {
+                selectedScreen.flags.splice(flagArrayIndex,1)
+            } else {
+                selectedScreen.flags.push(clickedFlag);
+            }
+        }
+       
         // console.log(clickedFlag, ` isActive:${isActive}  isOnline:${isOnline}... ${JSON.stringify(clickedSection)}`)
         updateClient();
     })
-    socket.on('selectNumber',({flag, number})=>{
-        console.log(flag, number)
-        let idx = flags.findIndex(el => el.flag==flag)
-        flags[idx].number=number;
-        updateClient();
-    })
+    // socket.on('selectNumber',({flag, number})=>{
+    //     console.log(flag, number)
+    //     let idx = flags.findIndex(el => el.flag==flag)
+    //     flags[idx].number=number;
+    //     updateClient();
+    // })
 
     socket.on('sectionUpdate',({section})=>{
         let idx = screens2.findIndex(el=>el.section==section);
         if (idx>-1) screens2[idx].clients.push(socket.id);
-        io.emit('showToast',{msg:`ny skärm (sektion: ${section})`})
+        showToast(`ny skärm (sektion: ${section})`)
     })
     socket.on('clickSection',({section})=>{
         let clickedSection = screens2.filter(el=>el.section==section)[0]
@@ -312,7 +347,7 @@ io.on('connection', socket => {
             activeSections.forEach(el => el.active=false)
             clickedSection.active ^= true
         } else {
-            io.emit('showToast',{msg:`Ingen skärm uppkopplad för sektion ${clickedSection.section}`,color:'orange'})
+            showToast(`Ingen skärm uppkopplad för sektion ${clickedSection.section}`,'orange')
         }
         console.log(section, ` isActive:${isActive}  isOnline:${isOnline}... ${JSON.stringify(clickedSection)}`)
         updateClient()
@@ -329,6 +364,9 @@ io.on('connection', socket => {
 
 function updateClient() {
     io.emit('updateClient',{screens,flags, screens2})
+}
+function showToast(msg, color) {
+    io.emit('showToast',{msg, color})
 }
 
 setInterval(() => {

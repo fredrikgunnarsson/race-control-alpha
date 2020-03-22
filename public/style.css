@@ -174,7 +174,38 @@ a:active {
 .select-flag:hover, .preview-screen:hover {
     opacity:.7;
 }
-.choose-number-btn {
+.blink {
+    display:none;
+    width: 75px;
+    height: 75px;
+    background: #ffffff;
+    color: black;
+    position: absolute;
+    right: 25%;
+    top: 50%;
+    font-size: 2.2rem;
+    font-weight: 400;
+    text-align: center;
+    line-height: 71px;
+    transform: translate(50%,-50%);
+    border-radius: 50%;
+    box-shadow: 5px 5px 19px -3px #11414b;
+    cursor: pointer;
+    opacity: .8;
+    transition:.2s ease-in-out;
+}
+.blink.can-blink {
+    display:initial;
+}
+.blink:hover {
+    transform: translate(50%,-50%) scale(1.15);
+    opacity: 1;
+}
+.blink-animation {
+    animation: blink .5s;
+    animation-iteration-count: infinite;
+}
+/* .choose-number-btn {
     display:none;
     width: 75px;
     height: 75px;
@@ -191,14 +222,14 @@ a:active {
     box-shadow: 5px 5px 13px -7px #11414b;
     cursor: pointer;
     opacity: .9;
-}
+} */
 /* .selected .choose-number-btn {
     display:initial;
-} */
+}
 .choose-number-btn:hover {
     opacity:1;
-}
-.enter-number-modal {
+} */
+/* .enter-number-modal {
     background: rgba(0,0,0,.8);
     display: none;
     flex-direction: column;
@@ -225,7 +256,7 @@ a:active {
     font-size:2rem;
     font-weight: 700;
     opacity:.4;
-}
+} */
 .selected {
     box-shadow:0 0 0 5px rgba(251,176,59,1)
 }
@@ -246,6 +277,7 @@ a:active {
     animation-iteration-count: 1;
     animation-fill-mode:forwards;
 }
+
 
 
 .flag {
@@ -320,5 +352,17 @@ a:active {
         }
     100% {
         transform:rotateX(-90deg);
+    }
+}
+
+@keyframes blink{
+    0% {
+        opacity:1;
+    }
+    50% {
+        opacity:.2;
+    }
+    100% {
+        opacity:1;
     }
 }
