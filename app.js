@@ -216,6 +216,8 @@ let config = {
     blinkTime:500,
 }
 
+//ROUTES
+
 app.get('/api/flags',(req,res,next)=>{
     res.json(flagsSchema)
 });
@@ -232,6 +234,8 @@ app.get('/screens',(req,res)=>{
     res.header("Content-Type",'application/json');
     res.send(JSON.stringify(screens2, null, 4));
 })
+
+//SOCKETS
 
 io.on('connection', socket => {
     console.log(new Date,`server connection initiated... id: ${socket.id}`)
@@ -264,6 +268,7 @@ io.on('connection', socket => {
         screens[idx] = screen
         updateClient()
     })
+
     socket.on('selectFlag2',({clickedFlag,blink,number})=>{
         let flagAttributes = flagsSchema.find(flag => flag.name==clickedFlag);
         let selectedScreen = screens2.find(el=>el.active);
@@ -315,6 +320,7 @@ io.on('connection', socket => {
         if (idx>-1) screens2[idx].clients.push(socket.id);
         showToast(`ny skärm (sektion: ${section})`)
     })
+
     socket.on('clickSection',({section})=>{
         let clickedSection = screens2.filter(el=>el.section==section)[0]
         let activeSections = screens2.filter(el=>el.active);
@@ -329,12 +335,15 @@ io.on('connection', socket => {
         }
         updateClient()
     })
+
     socket.on('changeCarouselSpeed',(ms)=>{
         config.shiftTime = ms;
         io.emit('changeCarouselSpeedServer',config.shiftTime);
     }) 
 
 })
+
+// HELPER FUNCTIONS
 
 function updateClient() {
     io.emit('updateClient',{screens,flags, screens2})

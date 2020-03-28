@@ -260,6 +260,17 @@ a:active {
     opacity: .75;
     right: 0px;
 }
+.all-screen:after {
+    content: 'ALLA SEKTIONER';
+    background-color: black;
+    padding: 10px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: 1.1rem;
+    opacity: .75;
+    right: 0px;
+}
 /* .choose-number-btn {
     display:none;
     width: 75px;

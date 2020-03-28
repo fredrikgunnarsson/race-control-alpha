@@ -188,6 +188,9 @@ function generateSelectFlags() {
                 class="${(flag.needNumber) ? 'need-number' : null}"
             ></div>
             <div 
+                class="${(flag.allScreen) ? 'all-screen' : null}"
+            ></div>
+            <div 
                 data-btn="blink-btn" 
                 data-flag="${flag.name}" 
                 class="blink ${(flag.canBlink) ? 'can-blink': ''}"
