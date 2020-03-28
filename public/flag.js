@@ -26,6 +26,7 @@
         let serverState=[];
         let flagNumber='';
         let carouselCounter = 0;
+        let carouselMs = 1700;
 
         const screenNameElement = document.querySelector('#screen-name');
         const flagScreenElement = document.querySelector('#flag-screen');
@@ -53,6 +54,9 @@
         socket.on('updateClient',({screens2})=>{
             serverState=screens2;
         })
+        socket.on('changeCarouselSpeedServer',(ms)=>{
+            carouselMs = ms;
+        })
 
         
         // ===============================
@@ -62,13 +66,14 @@
 
         function startFlagCarousel() {
 
-            setTimeout(startFlagCarousel, 1700);
+            setTimeout(startFlagCarousel, carouselMs);
 
             let thisSection = serverState.find(el=>el.section==section);
             let displayDiv = document.querySelector('.flag-display');
 
             if(thisSection && thisSection.flags.length < 1) {
                 displayDiv.className="flag-display";
+                displayDiv.children[0].innerText = '';
             } else {
                 let alternatingFlag = thisSection.flags[carouselCounter % thisSection.flags.length];
                 displayDiv.className=`
@@ -76,7 +81,6 @@
                     ${(alternatingFlag.blink) ? 'blink-animation': ''}
                 `;
                 //refactor this
-                console.log(thisSection)
                 displayDiv.children[0].innerText = (alternatingFlag.number) ? alternatingFlag.number : '' ;
             }
 

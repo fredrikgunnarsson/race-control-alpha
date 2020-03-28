@@ -10,6 +10,7 @@ let role='control';
 let flagNumber='';
 let carouselIdxFlag = 0;
 let carouselIdxPreview = 0;
+let carouselMs = 1700;
 
 const screenNameElement = document.querySelector('#screen-name');
 const controlScreenElement = document.querySelector('#control-screen');
@@ -23,6 +24,7 @@ const numberDisplayElement = document.querySelector('.number-display');
 const enterNumberModalElement = document.querySelector('.enter-number-modal');
 const enterNumberInput = document.querySelector('#enter-number');
 const submitNumberBtn = document.querySelector('#submit-number');
+const parametersModal = document.querySelector('.parameters');
 
 (()=> {
     return fetch('/api/flags')
@@ -64,27 +66,17 @@ document.addEventListener('click', (e)=>{
     else if(e.target.dataset.btn=='section-btn') {
         clickSection(e);
     }
+    else if (e.target.dataset.btn=='parameters-btn') {
+        parametersModal.style.display='initial';
+    }
+    else if (e.target.dataset.btn=='parameters-close-btn') {
+        parametersModal.style.display='none';
+    }
     else {
         // console.log(e);
     }
 
 })
-
-// document.addEventListener('keyup', (e)=>{
-//     if(e.keyCode == 13 && enterNumberModalElement.style.display == 'flex') {
-//         (enterNumberInput.value.length > 0) 
-//             ? closeNumberModal(true) 
-//             : closeNumberModal();
-//     } else if (enterNumberModalElement.style.display == 'flex' && enterNumberInput.value.length == 0) {
-//         submitNumberBtn.style.opacity='.4'
-//     } else if (enterNumberModalElement.style.display == 'flex' && enterNumberInput.value.length > 0) {
-//         submitNumberBtn.style.opacity='1';
-//     }
-//     else {
-//         console.log(e);
-//     }
-// })
-
 
 // ===============================
 // MAIN FUNCTIONS
@@ -96,6 +88,11 @@ function init () {
 
 function clickSection(e) {
     socket.emit('clickSection',{section:e.target.dataset.section})
+}
+function changeCarouselSpeed(ms) {
+    // carouselMs = ms;
+    showToast(`Ny flaggrotation ${ms}ms`,'green')
+    socket.emit('changeCarouselSpeed',ms)
 }
 
 function drawControlScreen() {
@@ -145,18 +142,25 @@ function initiateSockets() {
         // console.log('toast?')
         showToast(msg,color);
     })
+    socket.on('changeCarouselSpeedServer',(ms)=>{
+        console.log(ms);
+        
+        carouselMs = ms;
+    })
 }
+
 
 // ===============================
 // HELPER FUNCTIONS
 // ===============================
 
 function startPreviewCarousel() {
-    setTimeout(startPreviewCarousel, 1700);
+    setTimeout(startPreviewCarousel, carouselMs);
     serverState.forEach(screen => {
         let screenDiv = document.querySelector(`[data-section="${screen.section}"]`);
         if(screen.clients.length < 1 || screen.flags.length < 1) {
             screenDiv.className="btn section-screen";
+            screenDiv.children[0].innerText = '';
         } else {
             let thisScreen = screen.flags[carouselIdxPreview % screen.flags.length];
             screenDiv.className=`

@@ -8,7 +8,10 @@ body {
     margin:0px;
     padding:0px;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
-    background:#ddd;
+    background:#333;
+}
+a h2 {
+    color:#333;
 }
 a, a:visited {
     color:var(--primaryColor);
@@ -37,12 +40,14 @@ a:active {
     color:white;
     font-size:1.5rem;
     font-weight:700;
+    background:#ddd;
 }
 #flag-screen {
     background:gray;
     /* display:grid; */
     height: 100vh;
     width: 100%;
+    background:#ddd;
     /* grid-template-columns: 1fr; */
     /* grid-template-rows: 1fr calc(50vw * .754) 1fr; */
 }
@@ -93,8 +98,9 @@ a:active {
     z-index: 9;
 }
 .car-number-input {
-    margin:30px 60px 00px 60px;
-    color:black;
+    margin: 30px auto auto auto;
+    width: 1600px;
+    color: black;
 }
 .car-number-input input {
     font-size: 2rem;
@@ -195,10 +201,10 @@ a:active {
     background-repeat: no-repeat;
     background-color: gray;
     cursor: pointer;
-    transition:.15s ease-in-out;
+    transition:.1s ease-in-out;
 }
 .select-flag:hover, .preview-screen:hover {
-    transform:scale(1.1);
+    transform:scale(1.05);
 }
 /* .num-input-modal {
     position:fixed;
@@ -306,6 +312,31 @@ a:active {
     font-weight: 700;
     opacity:.4;
 } */
+.parameters {
+    display:none;
+    position: absolute;
+    padding: 100px;
+    background: black;
+    z-index: 200;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+.parameters .close {
+    color: white;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+}
+.parameters input {
+    font-size: 1.5rem;
+    line-height: 2.5rem;
+    font-weight: 800;
+    margin-left: 2rem;
+    width: 6rem;
+    text-align: center;
+}
 .selected {
     box-shadow:0 0 0 8px rgb(255, 155, 0), 7px 7px 12px 10px rgba(97, 58, 0, 0.6);
 }

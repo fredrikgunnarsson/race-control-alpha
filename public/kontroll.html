@@ -20,10 +20,12 @@
         <div class="clock">
             <span class="clock-time">Getting time...</span>
         </div>
-        <!-- <div class="enter-number-modal" data-btn="close-modal-btn">
-            <input type="text" id="enter-number" placeholder="enter number"/>
-            <input type="button" id="submit-number" value="OK" data-btn="submit-number">
-        </div> -->
+        <div class="parameters">
+            <div class="close" data-btn="parameters-close-btn">X</div>
+            <div>
+            <span>Flaggrotation (ms)</span><input type="text" onchange="changeCarouselSpeed(this.value)" />
+            </div>
+        </div>
         <div class="screens-wrapper">
             <div class="preview-screen-wrapper">
                 <div class="btn section-screen" data-btn="section-btn" data-section="0">
@@ -84,7 +86,7 @@
             <div class="race-functions-wrapper">
                 <div class="btn race-function-btn">Startljus</div>
                 <div class="btn race-function-btn">Övrig info</div>
-                <div class="btn race-function-btn">Parametrar</div>
+                <div class="btn race-function-btn" data-btn="parameters-btn">Parametrar</div>
             </div>
         </div>
         <div class="car-number-input">

@@ -5,10 +5,6 @@ let io = require('socket.io')(http);
 
 app.use('/', express.static('public'))
 
-// app.get('/', (req,res)=>{
-//     res.sendFile(__dirname+ '/index.html')
-// })
-
 const flagsSchema = [
     {
         name:'flag-finish', 
@@ -216,7 +212,7 @@ let screens2 = [
     },
 ];
 let config = {
-    shiftTime:1000,
+    shiftTime:1700,
     blinkTime:500,
 }
 
@@ -268,15 +264,6 @@ io.on('connection', socket => {
         screens[idx] = screen
         updateClient()
     })
-    // socket.on('selectFlag',(clickedFlag)=>{
-    //     let idx = flags.findIndex(el => el.flag==clickedFlag);
-    //     if (idx > -1) {
-    //         flags.splice(idx,1)
-    //     } else {
-    //         flags.push({flag:clickedFlag, number:null});
-    //     }
-    //     updateClient();
-    // })
     socket.on('selectFlag2',({clickedFlag,blink,number})=>{
         let flagAttributes = flagsSchema.find(flag => flag.name==clickedFlag);
         let selectedScreen = screens2.find(el=>el.active);
@@ -285,7 +272,6 @@ io.on('connection', socket => {
             showToast('Ingen sektion vald. Klicka på en sektion','orange');
             return null;
         }
-
         
         if (flagAttributes.allScreen) {
             if (!isFlagSelected()) {
@@ -323,12 +309,6 @@ io.on('connection', socket => {
         }
         updateClient();
     })
-    // socket.on('selectNumber',({flag, number})=>{
-    //     console.log(flag, number)
-    //     let idx = flags.findIndex(el => el.flag==flag)
-    //     flags[idx].number=number;
-    //     updateClient();
-    // })
 
     socket.on('sectionUpdate',({section})=>{
         let idx = screens2.findIndex(el=>el.section==section);
@@ -347,17 +327,13 @@ io.on('connection', socket => {
         } else {
             showToast(`Ingen skärm uppkopplad för sektion ${clickedSection.section}`,'orange')
         }
-        // console.log(section, ` isActive:${isActive}  isOnline:${isOnline}... ${JSON.stringify(clickedSection)}`)
         updateClient()
     })
+    socket.on('changeCarouselSpeed',(ms)=>{
+        config.shiftTime = ms;
+        io.emit('changeCarouselSpeedServer',config.shiftTime);
+    }) 
 
-    // socket.on('selectScreenRole', ({id,role})=>{
-    //     console.log(role);
-        
-    //     let idx = screens.findIndex(el => el.id==id);
-    //     screens[idx].role=role
-    //     updateClient()
-    // })
 })
 
 function updateClient() {
