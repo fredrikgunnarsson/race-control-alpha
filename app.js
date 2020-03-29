@@ -129,9 +129,9 @@ const flagsSchema = [
 ]
 
 let PORT = process.env.PORT || 3009;
-let flags = []
+let flags = [];
 let screens = [];
-let screens2 = [
+let sections = [
     {
         section:0,
         clients:[],
@@ -232,7 +232,7 @@ app.get('/kontroll',(req,res)=>{
 })
 app.get('/screens',(req,res)=>{
     res.header("Content-Type",'application/json');
-    res.send(JSON.stringify(screens2, null, 4));
+    res.send(JSON.stringify(sections, null, 4));
 })
 
 //SOCKETS
@@ -248,7 +248,7 @@ io.on('connection', socket => {
         let idx = screens.findIndex(el => el.id==socket.id)
         screens.splice(idx,1)
 
-        screens2.forEach(el=>{
+        sections.forEach(el=>{
             let idx = el.clients.indexOf(socket.id);
             if (idx > -1) {
                 el.clients.splice(idx,1);
@@ -264,14 +264,15 @@ io.on('connection', socket => {
         updateClient()
     })
     socket.on('clientScreenInfo',({id,screen})=>{
-        let idx = screens.findIndex(el => el.id==id)
-        screens[idx] = screen
+        // let idx = screens.findIndex(el => el.id==id)
+        // screens[idx] = screen
+        // console.log('screens',screens)
         updateClient()
     })
 
     socket.on('selectFlag2',({clickedFlag,blink,number})=>{
         let flagAttributes = flagsSchema.find(flag => flag.name==clickedFlag);
-        let selectedScreen = screens2.find(el=>el.active);
+        let selectedScreen = sections.find(el=>el.active);
 
         if (!selectedScreen) {
             showToast('Ingen sektion vald. Klicka på en sektion','orange');
@@ -280,11 +281,11 @@ io.on('connection', socket => {
         
         if (flagAttributes.allScreen) {
             if (!isFlagSelected()) {
-                screens2
+                sections
                 .filter(screen => screen.clients.length > 0)
                 .forEach(screen => screen.flags=[{name:clickedFlag,blink:blink,number:number}]);
             } else {
-                screens2
+                sections
                 .filter(screen => screen.clients.length > 0)
                 .forEach(screen => screen.flags=[]);
             }
@@ -316,14 +317,14 @@ io.on('connection', socket => {
     })
 
     socket.on('sectionUpdate',({section})=>{
-        let idx = screens2.findIndex(el=>el.section==section);
-        if (idx>-1) screens2[idx].clients.push(socket.id);
+        let idx = sections.findIndex(el=>el.section==section);
+        if (idx>-1) sections[idx].clients.push(socket.id);
         showToast(`ny skärm (sektion: ${section})`)
     })
 
     socket.on('clickSection',({section})=>{
-        let clickedSection = screens2.filter(el=>el.section==section)[0]
-        let activeSections = screens2.filter(el=>el.active);
+        let clickedSection = sections.filter(el=>el.section==section)[0]
+        let activeSections = sections.filter(el=>el.active);
         let isActive = clickedSection.active
         let isOnline = (clickedSection.clients.length > 0) ? true : false;
 
@@ -346,7 +347,7 @@ io.on('connection', socket => {
 // HELPER FUNCTIONS
 
 function updateClient() {
-    io.emit('updateClient',{screens,flags, screens2})
+    io.emit('updateClient',{sections})
 }
 function showToast(msg, color) {
     io.emit('showToast',{msg, color})

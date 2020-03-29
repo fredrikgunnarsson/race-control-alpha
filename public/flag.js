@@ -49,10 +49,10 @@
         })
         
         socket.on('checkClientScreen',()=>{
-            socket.emit('clientScreenInfo',{id:socket.id, screen:clientScreen});
+            socket.emit('clientScreenInfo','none needed');
         })
-        socket.on('updateClient',({screens2})=>{
-            serverState=screens2;
+        socket.on('updateClient',({sections})=>{
+            serverState=sections;
         })
         socket.on('changeCarouselSpeedServer',(ms)=>{
             carouselMs = ms;

@@ -133,18 +133,15 @@ function initiateSockets() {
     socket.on('disconnect',()=>{
         screenNameElement.innerHTML='server disconnected!!!';
     })
-    socket.on('updateClient',({screens,flags,screens2})=>{
+    socket.on('updateClient',({sections})=>{
         // console.log('updateClient...');
-        serverState=screens2;
+        serverState=sections;
         drawControlScreen();
     })
     socket.on('showToast', ({msg, color})=>{
-        // console.log('toast?')
         showToast(msg,color);
     })
     socket.on('changeCarouselSpeedServer',(ms)=>{
-        console.log(ms);
-        
         carouselMs = ms;
     })
 }
