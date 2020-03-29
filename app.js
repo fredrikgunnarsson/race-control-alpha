@@ -228,7 +228,7 @@ function showToast(msg, color) {
 
 setInterval(() => {
     console.log('...');
-}, 1000);
+}, 3000);
 
 
 http.listen(PORT, ()=>{

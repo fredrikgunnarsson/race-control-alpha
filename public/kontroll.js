@@ -7,15 +7,13 @@ let flagsSchema = [{}];
 let serverState=[];
 let role='control';
 
-let flagNumber='';
-let carouselIdxFlag = 0;
-let carouselIdxPreview = 0;
+let carouselCounter = 0;
 let carouselMs = 1700;
 
 const screenNameElement = document.querySelector('#screen-name');
 const controlScreenElement = document.querySelector('#control-screen');
 const flagScreenElement = document.querySelector('#flag-screen');
-const clockBannerElement = document.querySelectorAll('.clock');
+const clockBannerElement = document.querySelector('.clock span');
 const selectFlagWrapperElement = document.querySelector('.select-flag-wrapper');
 const previewScreenElement = document.querySelector('.preview-screen');
 const previewScreenNumberElement = document.querySelector('.preview-screen-number');
@@ -81,10 +79,6 @@ document.addEventListener('click', (e)=>{
 // ===============================
 // MAIN FUNCTIONS
 // ===============================
-
-function init () {
-    
-}
 
 function clickSection(e) {
     socket.emit('clickSection',{section:e.target.dataset.section})
@@ -159,7 +153,7 @@ function startPreviewCarousel() {
             screenDiv.className="btn section-screen";
             screenDiv.children[0].innerText = '';
         } else {
-            let thisScreen = screen.flags[carouselIdxPreview % screen.flags.length];
+            let thisScreen = screen.flags[carouselCounter % screen.flags.length];
             screenDiv.className=`
                 btn section-screen flag ${thisScreen.name}
                 ${(thisScreen.blink) ? 'blink-animation' : ''}`;
@@ -169,7 +163,7 @@ function startPreviewCarousel() {
         if(screen.active) screenDiv.classList.add('selected');
     })
 
-    carouselIdxPreview++;
+    carouselCounter++;
 }
 
 function generateSelectFlags() {
@@ -209,8 +203,6 @@ function showToast(msg,color) {
 }
 
 setInterval(() => {
-    clockBannerElement.forEach(el=>{
-        el.innerText=Date().slice(16,24)
-    })
+    clockBannerElement.innerText=Date().slice(0,24);
+    // clockBannerElement.innerText=Date().slice(16,24);
 }, 1000);
-

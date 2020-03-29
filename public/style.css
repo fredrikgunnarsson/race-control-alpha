@@ -464,3 +464,27 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none; 
   margin: 0; 
 }
+
+svg.track {
+    position: absolute;
+    right: 20px;
+    height: 75%;
+    transform: translateY(-50%);
+    top: 50%;
+}
+.path-track {
+    color:white;
+    stroke-dasharray: 3900;
+    stroke-dashoffset: 3900;
+    stroke-linecap: round;
+    animation: dash 5s linear forwards;
+  }
+  
+  @keyframes dash {
+    from {
+      stroke-dashoffset: -3900;
+    }
+    to {
+      stroke-dashoffset: 1;
+    }
+  }
