@@ -44,7 +44,7 @@ const parametersModal = document.querySelector('.parameters');
 document.addEventListener('click', (e)=>{
     if(e.target.dataset.btn=='select-flag') {
         let flag = e.target.dataset.flag;
-        socket.emit('selectFlag2', {clickedFlag:flag,blink:false} )
+        socket.emit('selectFlag', {clickedFlag:flag,blink:false} )
     }
     else if (e.target.dataset.btn=='select-num-flag') {
         let flag = e.target.dataset.flag;
@@ -52,16 +52,16 @@ document.addEventListener('click', (e)=>{
         let isSelected = [...e.target.classList].includes('selected');
 
         if (numEl.value > 0 || isSelected) {
-            socket.emit('selectFlag2', {clickedFlag:flag,blink:false,number:numEl.value})
+            socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:numEl.value})
             numEl.value=null;
         } else {
             showToast('Inget nummer. Fyll i nummer!','red');
         }
-        // socket.emit('selectFlag2', {clickedFlag:flag,blink:true})
+        // socket.emit('selectFlag', {clickedFlag:flag,blink:true})
     }
     else if (e.target.dataset.btn=='blink-btn') {
         let flag = e.target.parentElement.dataset.flag;
-        socket.emit('selectFlag2', {clickedFlag:flag,blink:true})
+        socket.emit('selectFlag', {clickedFlag:flag,blink:true})
     }
     else if(e.target.dataset.btn=='section-btn') {
         clickSection(e);

@@ -48,9 +48,6 @@
             screenNameElement.innerHTML='server disconnected!!!';
         })
         
-        socket.on('checkClientScreen',()=>{
-            socket.emit('clientScreenInfo','none needed');
-        })
         socket.on('updateClient',({sections})=>{
             serverState=sections;
         })

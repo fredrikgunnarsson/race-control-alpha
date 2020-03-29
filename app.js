@@ -141,14 +141,8 @@ io.on('connection', socket => {
 
         updateClient()
     })
-    socket.on('clientScreenInfo',({id,screen})=>{
-        // let idx = screens.findIndex(el => el.id==id)
-        // screens[idx] = screen
-        // console.log('screens',screens)
-        updateClient()
-    })
 
-    socket.on('selectFlag2',({clickedFlag,blink,number})=>{
+    socket.on('selectFlag',({clickedFlag,blink,number})=>{
         let flagAttributes = flagsSchema.find(flag => flag.name==clickedFlag);
         let selectedScreen = sections.find(el=>el.active);
 
@@ -197,7 +191,8 @@ io.on('connection', socket => {
     socket.on('sectionUpdate',({section})=>{
         let idx = sections.findIndex(el=>el.section==section);
         if (idx>-1) sections[idx].clients.push(socket.id);
-        showToast(`ny skärm (sektion: ${section})`)
+        showToast(`ny skärm (sektion: ${section})`);
+        updateClient();
     })
 
     socket.on('clickSection',({section})=>{
