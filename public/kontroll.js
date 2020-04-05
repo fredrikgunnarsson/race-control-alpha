@@ -24,6 +24,8 @@ const enterNumberModalElement = document.querySelector('.enter-number-modal');
 const enterNumberInput = document.querySelector('#enter-number');
 const submitNumberBtn = document.querySelector('#submit-number');
 const parametersModal = document.querySelector('.parameters');
+const parameterShiftTime = document.querySelector('.settingFlaggrotation');
+const parameterblinkTime = document.querySelector('.settingBlinkhastighet');
 
 (()=> {
     return fetch('/api/flags')
@@ -102,6 +104,8 @@ function updateSettings(config) {
         .style.animationDuration=config.blinkTime+'ms'
     
     carouselMs = config.shiftTime;
+    parameterShiftTime.value=config.shiftTime;
+    parameterblinkTime.value=config.blinkTime;
 }
 
 function drawControlScreen() {

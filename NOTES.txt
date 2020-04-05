@@ -1,3 +1,10 @@
 [x] flytta upp nummer till kontrollknapparna
-[] starta blinkning även när flaggan är aktiv
+[x] starta blinkning även när flaggan är aktiv
 [x] flaggskärm: öka storlek på siffra på flaggskärm
+
+[x] Inställningarna visas inte vad dom är inställda på
+[] Flaggorna ska ha stöd för tresiffriga nummer
+[] Anpassa sifferstorlek utifrån om det 1, 2 eller 3 siffror i bredd
+[] Anpassa flaggboxarna efter flaggornas storlek
+[] Lägg in flaggtabellen i Settings så att man kan ändra
+[] Dynamiskt antal skärmar, lägg in i inställningar
