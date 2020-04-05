@@ -1,1 +1,3 @@
-[] 
+[] flytta upp nummer till kontrollknapparna
+[] starta blinkning även när flaggan är aktiv
+[] flaggskärm: öka storlek på siffra på flaggskärm
