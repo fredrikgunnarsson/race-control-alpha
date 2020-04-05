@@ -186,6 +186,10 @@ io.on('connection', socket => {
                 } else {
                     selectedScreen.flags.splice(flagArrayIndex,1)
                 }
+            } else if (flagAttributes.pause) {
+                console.log(selectedScreen.flags, flagAttributes.pause)
+                selectedScreen.flags.length=0;
+                selectedScreen.flags.push({name:clickedFlag,blink:blink,number:number});
             } else {
                 selectedScreen.flags.push({name:clickedFlag,blink:blink,number:number});
             }
