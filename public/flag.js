@@ -27,6 +27,7 @@
         let flagNumber='';
         let carouselCounter = 0;
         let carouselMs = 1700;
+        let blinkTime=500;
 
         const screenNameElement = document.querySelector('#screen-name');
         const flagScreenElement = document.querySelector('#flag-screen');
@@ -48,18 +49,28 @@
             screenNameElement.innerHTML='server disconnected!!!';
         })
         
-        socket.on('updateClient',({sections})=>{
+        socket.on('updateClient',({sections, config})=>{
             serverState=sections;
+            updateSettings(config);
         })
-        socket.on('changeCarouselSpeedServer',(ms)=>{
-            carouselMs = ms;
-        })
+        // socket.on('changeCarouselSpeedServer',(ms)=>{
+        //     carouselMs = ms;
+        // })
 
         
         // ===============================
         // HELPER FUNCTIONS
         // ===============================
 
+        function updateSettings(config) {
+            let styles = [...document.styleSheets[0].cssRules];
+
+            styles
+                .find(res=>res.selectorText==".blink-animation")
+                .style.animationDuration=config.blinkTime+'ms'
+            
+            carouselMs = config.shiftTime;
+        }
 
         function startFlagCarousel() {
 

@@ -9,11 +9,12 @@ let role='control';
 
 let carouselCounter = 0;
 let carouselMs = 1700;
+let blinkTime=500;
 
 const screenNameElement = document.querySelector('#screen-name');
 const controlScreenElement = document.querySelector('#control-screen');
 const flagScreenElement = document.querySelector('#flag-screen');
-const clockBannerElement = document.querySelector('.clock span');
+const clockElement = document.querySelector('.clock');
 const selectFlagWrapperElement = document.querySelector('.select-flag-wrapper');
 const previewScreenElement = document.querySelector('.preview-screen');
 const previewScreenNumberElement = document.querySelector('.preview-screen-number');
@@ -65,10 +66,12 @@ document.addEventListener('click', (e)=>{
         clickSection(e);
     }
     else if (e.target.dataset.btn=='parameters-btn') {
-        parametersModal.style.display='initial';
+        // parametersModal.style.display='initial';
+        parametersModal.classList.toggle('open')
     }
     else if (e.target.dataset.btn=='parameters-close-btn') {
-        parametersModal.style.display='none';
+        // parametersModal.style.display='none';
+        parametersModal.classList.toggle('open')
     }
     else {
         // console.log(e);
@@ -84,9 +87,21 @@ function clickSection(e) {
     socket.emit('clickSection',{section:e.target.dataset.section})
 }
 function changeCarouselSpeed(ms) {
-    // carouselMs = ms;
     showToast(`Ny flaggrotation ${ms}ms`,'green')
     socket.emit('changeCarouselSpeed',ms)
+}
+function changeBlinkSpeed(ms) {
+    showToast(`Ny blinkhastighet ${ms}ms`,'green')
+    socket.emit('changeBlinkSpeed',ms)
+}
+function updateSettings(config) {
+    let styles = [...document.styleSheets[0].cssRules];
+
+    styles
+        .find(res=>res.selectorText==".blink-animation")
+        .style.animationDuration=config.blinkTime+'ms'
+    
+    carouselMs = config.shiftTime;
 }
 
 function drawControlScreen() {
@@ -127,17 +142,19 @@ function initiateSockets() {
     socket.on('disconnect',()=>{
         screenNameElement.innerHTML='server disconnected!!!';
     })
-    socket.on('updateClient',({sections})=>{
+    socket.on('updateClient',({sections, config})=>{
         // console.log('updateClient...');
         serverState=sections;
+
+        updateSettings(config)
         drawControlScreen();
     })
     socket.on('showToast', ({msg, color})=>{
         showToast(msg,color);
     })
-    socket.on('changeCarouselSpeedServer',(ms)=>{
-        carouselMs = ms;
-    })
+    // socket.on('changeCarouselSpeedServer',(ms)=>{
+    //     carouselMs = ms;
+    // })
 }
 
 
@@ -179,6 +196,9 @@ function generateSelectFlags() {
                 class="${(flag.needNumber) ? 'need-number' : null}"
             ></div>
             <div 
+                class="${(flag.pause) ? 'pause' : null}"
+            ></div>
+            <div 
                 class="${(flag.allScreen) ? 'all-screen' : null}"
             ></div>
             <div 
@@ -203,6 +223,6 @@ function showToast(msg,color) {
 }
 
 setInterval(() => {
-    clockBannerElement.innerText=Date().slice(0,24);
-    // clockBannerElement.innerText=Date().slice(16,24);
+    clockElement.innerText=Date().slice(0,24);
+    // clockElement.innerText=Date().slice(16,24);
 }, 1000);

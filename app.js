@@ -152,14 +152,12 @@ io.on('connection', socket => {
         }
         
         if (flagAttributes.allScreen) {
+            let allScreensWithFlags = sections.filter(screen => screen.clients.length > 0);
+
             if (!isFlagSelected()) {
-                sections
-                .filter(screen => screen.clients.length > 0)
-                .forEach(screen => screen.flags=[{name:clickedFlag,blink:blink,number:number}]);
+                allScreensWithFlags.forEach(screen => screen.flags=[{name:clickedFlag,blink:blink,number:number}]);
             } else {
-                sections
-                .filter(screen => screen.clients.length > 0)
-                .forEach(screen => screen.flags=[]);
+                allScreensWithFlags.forEach(screen => screen.flags=[]);
             }
         }
         else if (selectedScreen.flags.length > 1) {
@@ -174,13 +172,20 @@ io.on('connection', socket => {
         }
 
         function isFlagSelected() { 
-            return (selectedScreen.flags.findIndex(flag=>flag.name == clickedFlag) < 0) ? false : true;
+            // return (selectedScreen.flags.findIndex(flag=>flag.name == clickedFlag) < 0) ? false : true;
+            return selectedScreen.flags.find(flag=>flag.name == clickedFlag);
         }
+        
         function toggleFlagSelection() {
             let flagArrayIndex= selectedScreen.flags.findIndex(flag=>flag.name == clickedFlag);
 
             if (isFlagSelected()) {
-                selectedScreen.flags.splice(flagArrayIndex,1)
+                //Make it blink instead of removing the flag if blinkbtn is pressed
+                if (blink && !isFlagSelected().blink) {
+                    selectedScreen.flags[flagArrayIndex].blink=true;
+                } else {
+                    selectedScreen.flags.splice(flagArrayIndex,1)
+                }
             } else {
                 selectedScreen.flags.push({name:clickedFlag,blink:blink,number:number});
             }
@@ -212,7 +217,13 @@ io.on('connection', socket => {
 
     socket.on('changeCarouselSpeed',(ms)=>{
         config.shiftTime = ms;
-        io.emit('changeCarouselSpeedServer',config.shiftTime);
+        updateClient();
+        // io.emit('changeCarouselSpeedServer',config.shiftTime);
+    }) 
+    socket.on('changeBlinkSpeed',(ms)=>{
+        config.blinkTime = ms;
+        updateClient();
+        // io.emit('changeCarouselSpeedServer',config.shiftTime);
     }) 
 
 })
@@ -220,7 +231,7 @@ io.on('connection', socket => {
 // HELPER FUNCTIONS
 
 function updateClient() {
-    io.emit('updateClient',{sections})
+    io.emit('updateClient',{sections, config})
 }
 function showToast(msg, color) {
     io.emit('showToast',{msg, color})
