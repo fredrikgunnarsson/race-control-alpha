@@ -203,6 +203,7 @@ nav {
     transform:scale(1.05);
 }
 .blink {
+    display:none;
     width: 65px;
     height: 65px;
     background: #ffffff;
