@@ -145,56 +145,82 @@ io.on('connection', socket => {
     socket.on('selectFlag',({clickedFlag,blink,number})=>{
         let flagAttributes = flagsSchema.find(flag => flag.name==clickedFlag);
         let selectedScreen = sections.find(el=>el.active);
+        let allActiveScreens = sections.filter(screen => screen.clients.length > 0);
+        let flagIndex = (selectedScreen) ? selectedScreen.flags.findIndex(flag=>flag.name == clickedFlag) : undefined;
 
         if (!selectedScreen) {
             showToast('Ingen sektion vald. Klicka på en sektion','orange');
-            return null;
+            return;
+        }
+
+        if (isFlagSelected()) {
+            if (flagAttributes.allScreen) {
+                if (blink && !isFlagSelected().blink) {
+                    allActiveScreens.forEach(screen => screen.flags=[{name:clickedFlag,blink:blink,number:number}]);
+                } else {
+                    allActiveScreens.forEach(screen => screen.flags.length=0);
+                }
+            } else if (blink && !isFlagSelected().blink) {
+                selectedScreen.flags[flagIndex].blink=true;
+            } else if (number) {
+                showToast('Kommande funktionalitet: Lägga till två nummer');
+                removeScreenFlag();
+            } else {
+                removeScreenFlag()
+            }
+            updateClient()
+            return;
+        }
+
+        if (flagAttributes.prio > getLowestPrio()) {
+            showToast(`Flagga med prio ${getLowestPrio()} visas, släck den först`,'red')
+            return;
+        }
+
+        if (flagAttributes.allScreen) {
+            allActiveScreens.forEach(screen => screen.flags=[{name:clickedFlag,blink:blink,number:number}]);
+            updateClient()
+            return;
+        }
+
+        if (flagAttributes.isSignal) {
+            if(flagAttributes.pause) {
+                let otherFlags = selectedScreen.flags.map(flag=>flag.name);
+                showToast(`Kommande funktionalitet: pausa flaggor (${otherFlags})`)
+            }
+            removeAllScreenFlags()
+            addFlagToScreen()
+            updateClient()
+            return;
+        }
+
+        if (selectedScreen.flags.length > 1) {
+            showToast('Max två flaggor tillåtna', 'red');
+            return;
         }
         
-        if (flagAttributes.allScreen) {
-            let allScreensWithFlags = sections.filter(screen => screen.clients.length > 0);
+        addFlagToScreen()
+        updateClient()
+        return;
 
-            if (!isFlagSelected()) {
-                allScreensWithFlags.forEach(screen => screen.flags=[{name:clickedFlag,blink:blink,number:number}]);
-            } else {
-                allScreensWithFlags.forEach(screen => screen.flags=[]);
-            }
+        function removeAllScreenFlags() {
+            selectedScreen.flags.length=0;
         }
-        else if (selectedScreen.flags.length > 1) {
-            if (isFlagSelected() || flagAttributes.pause) {
-                toggleFlagSelection()
-            } else {
-                showToast('Max två flaggor tillåtna', 'red');
-                return null;
-            } 
-        } else {
-            toggleFlagSelection();
+        function addFlagToScreen() {
+            selectedScreen.flags.push({name:clickedFlag,blink:blink,number:number});
         }
-
+        function removeScreenFlag() {
+            selectedScreen.flags.splice(flagIndex,1)
+        }
         function isFlagSelected() { 
-            // return (selectedScreen.flags.findIndex(flag=>flag.name == clickedFlag) < 0) ? false : true;
             return selectedScreen.flags.find(flag=>flag.name == clickedFlag);
         }
-        
-        function toggleFlagSelection() {
-            let flagArrayIndex= selectedScreen.flags.findIndex(flag=>flag.name == clickedFlag);
-
-            if (isFlagSelected()) {
-                //Make it blink instead of removing the flag if blinkbtn is pressed
-                if (blink && !isFlagSelected().blink) {
-                    selectedScreen.flags[flagArrayIndex].blink=true;
-                } else {
-                    selectedScreen.flags.splice(flagArrayIndex,1)
-                }
-            } else if (flagAttributes.pause) {
-                // console.log(selectedScreen.flags, flagAttributes.pause)
-                selectedScreen.flags.length=0;
-                selectedScreen.flags.push({name:clickedFlag,blink:blink,number:number});
-            } else {
-                selectedScreen.flags.push({name:clickedFlag,blink:blink,number:number});
-            }
+        function getLowestPrio() {
+            let flagPrios =  selectedScreen.flags.map(flag => {
+                return flagsSchema.find(el => el.name==flag.name).prio
+            })
+            return Math.min(...flagPrios);
         }
-        updateClient();
     })
 
     socket.on('sectionUpdate',({section})=>{

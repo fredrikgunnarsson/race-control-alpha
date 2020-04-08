@@ -52,7 +52,8 @@ document.addEventListener('click', (e)=>{
         let numEl = document.querySelector('.car-number-input input');
         let isSelected = [...e.target.classList].includes('selected');
 
-        if (numEl.value > 0 || isSelected) {
+        // if (numEl.value > 0 || isSelected) {
+        if (numEl.value > 0) {
             socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:numEl.value})
             numEl.value=null;
         } else {
@@ -198,6 +199,12 @@ function generateSelectFlags() {
         >
             <div 
                 class="${(flag.needNumber) ? 'need-number' : null}"
+            ></div>
+            <div 
+                class="prio"
+            >${flag.prio}</div>
+            <div 
+                class="${(flag.isSignal) ? 'signal' : null}"
             ></div>
             <div 
                 class="${(flag.pause) ? 'pause' : null}"
