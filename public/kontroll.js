@@ -223,7 +223,8 @@ function showToast(msg,color) {
     if (color) newEl.style.backgroundColor=color;
     document.querySelector('body').appendChild(newEl);
     setTimeout(() => {
-        document.querySelectorAll('.toast').forEach(el=>el.remove())
+        // document.querySelectorAll('.toast').forEach(el=>el.remove())
+        document.querySelector('.toast').remove();
     }, 2500);
 }
 
