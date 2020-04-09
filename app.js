@@ -187,12 +187,12 @@ io.on('connection', socket => {
 
         if (flagAttributes.isSignal) {
             if(flagAttributes.pause) {
-                // let otherFlags = selectedScreen.flags.map(flag=>flag.name);
                 let otherFlags = selectedScreen.flags.filter(flag => {
                     return flagsSchema.find(el => el.name == flag.name).save
                 })
                 selectedScreen.pausedFlags= [...otherFlags];
-                showToast(`Flaggor pausade`)
+                console.log(otherFlags);
+                if (otherFlags.length > 0) showToast(`Flaggor pausade`);
             }
             removeAllScreenFlags()
             addFlagToScreen()

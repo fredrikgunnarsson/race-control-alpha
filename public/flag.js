@@ -77,19 +77,25 @@
             setTimeout(startFlagCarousel, carouselMs);
 
             let thisSection = serverState.find(el=>el.section==section);
+            let alternatingFlag = thisSection.flags[carouselCounter % thisSection.flags.length];
             let displayDiv = document.querySelector('.flag-display');
+            let carNumDiv = document.querySelector('.carNum');
 
             if(thisSection && thisSection.flags.length < 1) {
                 displayDiv.className="flag-display";
-                displayDiv.children[0].innerText = '';
+                carNumDiv.innerText = '';
             } else {
-                let alternatingFlag = thisSection.flags[carouselCounter % thisSection.flags.length];
+                let numLength = (alternatingFlag.hasOwnProperty('number')) ? alternatingFlag.number.length : '';
                 displayDiv.className=`
-                    flag-display flag ${alternatingFlag.name}
+                    flag-display 
+                    flag 
+                    ${alternatingFlag.name} 
                     ${(alternatingFlag.blink) ? 'blink-animation': ''}
+                    ${(numLength==1) ? 'xxl' : ''}
+                    ${(numLength==2) ? 'xl' : ''}
                 `;
                 //refactor this
-                displayDiv.children[0].innerText = (alternatingFlag.number) ? alternatingFlag.number : '' ;
+                carNumDiv.innerText = (alternatingFlag.number) ? alternatingFlag.number : '' ;
             }
 
             carouselCounter++;

@@ -202,6 +202,7 @@ function generateSelectFlags() {
             <div class="${(flag.isSignal) ? 'signal' : null}"></div>
             <div class="${(flag.pause) ? 'pause' : null}"></div>
             <div class="${(flag.allScreen) ? 'all-screen' : null}"></div>
+            <div class="${(flag.save) ? 'save' : null}"></div>
             <div 
                 data-btn="blink-btn" 
                 data-flag="${flag.name}" 

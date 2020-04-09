@@ -27,23 +27,17 @@ a:active {
     opacity:.25;
 }
 #control-screen {
-    /* display:grid; */
     min-height: 100vh;
     width: 100%;
-    /* grid-template-rows: auto auto 1fr; */
     color:white;
     font-size:1.3rem;
     font-weight:700;
     background:#ddd;
 }
 #flag-screen {
-    background:gray;
-    /* display:grid; */
+    background:#ddd;
     height: 100vh;
     width: 100%;
-    background:#ddd;
-    /* grid-template-columns: 1fr; */
-    /* grid-template-rows: 1fr calc(50vw * .754) 1fr; */
 }
 header {
     position: fixed;
@@ -69,7 +63,6 @@ nav {
     line-height: 3rem;
 }
 .flag-display {
-    /* grid-row: 2; */
     height:100vh;
     width:100%;
     border: 5px solid;
@@ -119,7 +112,6 @@ nav {
 }
 .section-screen {
     position: relative;
-    /* width:220px; */
     height:100%;
     display: flex;
     justify-content: flex-end;
@@ -131,18 +123,25 @@ nav {
     background-repeat:no-repeat;
 }
 .carNum {
-    padding: 1rem;
+    padding: 0.5rem;
     pointer-events: none;
-    font-size: 2.5rem;
+    font-size: 1.6rem;
     line-height: 0;
 }
 .flag-display .carNum {
-    font-size: 40vh;
+    font-size: 17vw;
     position: absolute;
     font-weight: 900;
-    right: 3vw;
+    left: 59%;
+    line-height: 0;
     top: 50%;
     transform: translateY(-50%);
+}
+.flag-display.xxl .carNum {
+    font-size:25vw;    
+}
+.flag-display.xl .carNum {
+    font-size:22vw;    
 }
 .sectorLabel {
     position: absolute;
@@ -159,7 +158,6 @@ nav {
     position: absolute;
     width: 100%;
     height: 100%;
-    /* background: rgba(0,0,0,.4); */
 }
 .race-functions-wrapper {
     grid-area: functions;
@@ -191,7 +189,6 @@ nav {
 }
 .select-flag {
     position: relative;
-    /* background-size: cover; */
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -292,8 +289,17 @@ nav {
     font-size: 8px;
     pointer-events: none;
 }
+.save:after {
+    content:'';
+    background-image: url("data:image/svg+xml,%0A%3Csvg height='512pt' viewBox='0 0 512 512' width='512pt' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m486.996094 64.382812-39.378906-39.378906c-16-16.023437-37.695313-25.003906-60.332032-25.003906h-328.617187c-32.40625 0-58.667969 26.261719-58.667969 58.667969v394.664062c0 32.40625 26.261719 58.667969 58.667969 58.667969h394.664062c32.40625 0 58.667969-26.261719 58.667969-58.667969v-328.617187c0-22.636719-8.980469-44.332032-25.003906-60.332032zm-401.664063 68.949219v-53.332031c0-8.832031 7.167969-16 16-16h224c8.832031 0 16 7.167969 16 16v53.332031c0 8.832031-7.167969 16-16 16h-224c-8.832031 0-16-7.167969-16-16zm170.667969 293.335938c-53.011719 0-96-42.988281-96-96 0-53.015625 42.988281-96 96-96s96 42.984375 96 96c0 53.011719-42.988281 96-96 96zm0 0'/%3E%3C/svg%3E");
+    background-size:contain;
+    padding: 7px;
+    position: absolute;
+    top: -17px;
+    right: 58px;
+    pointer-events: none;
+}
 .parameters {
-    /* display: none; */
     opacity:.3;
     transform: translateX(-100%);
     position: absolute;
@@ -304,7 +310,6 @@ nav {
     transition: 250ms ease-in-out;
 }
 .parameters.open {
-    /* display:initial; */
     opacity: 1;
     transform: translateX(0%);
 }
@@ -351,8 +356,6 @@ nav {
 
 svg.track {
     height: 75%;
-    /* transform: translateY(-50%);
-    top: 50%; */
 }
 .path-track {
     color:white;
@@ -365,7 +368,9 @@ svg.track {
 .flag {
     background-position: center;
     background-size: cover;
-    /* background-size: contain; */
+}
+#flag-screen .flag {
+    background-size: contain;
 }
 
 .flag-finish {
