@@ -165,6 +165,8 @@ io.on('connection', socket => {
             } else if (number) {
                 showToast('Kommande funktionalitet: Lägga till två nummer');
                 removeScreenFlag();
+            } else if (flagAttributes.pause) {
+                selectedScreen.flags = [...selectedScreen.pausedFlags]
             } else {
                 removeScreenFlag()
             }
@@ -185,8 +187,12 @@ io.on('connection', socket => {
 
         if (flagAttributes.isSignal) {
             if(flagAttributes.pause) {
-                let otherFlags = selectedScreen.flags.map(flag=>flag.name);
-                showToast(`Kommande funktionalitet: pausa flaggor (${otherFlags})`)
+                // let otherFlags = selectedScreen.flags.map(flag=>flag.name);
+                let otherFlags = selectedScreen.flags.filter(flag => {
+                    return flagsSchema.find(el => el.name == flag.name).save
+                })
+                selectedScreen.pausedFlags= [...otherFlags];
+                showToast(`Flaggor pausade`)
             }
             removeAllScreenFlags()
             addFlagToScreen()
