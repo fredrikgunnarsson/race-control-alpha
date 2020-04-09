@@ -26,6 +26,7 @@ const submitNumberBtn = document.querySelector('#submit-number');
 const parametersModal = document.querySelector('.parameters');
 const parameterShiftTime = document.querySelector('.settingFlaggrotation');
 const parameterblinkTime = document.querySelector('.settingBlinkhastighet');
+const parameterFlagAttributes = document.querySelector('.flag-attributes');
 
 (()=> {
     return fetch('/api/flags')
@@ -33,6 +34,7 @@ const parameterblinkTime = document.querySelector('.settingBlinkhastighet');
     .then(data => {
         flagsSchema = data;
         selectFlagWrapperElement.innerHTML=generateSelectFlags();
+        parameterFlagAttributes.innerHTML=generateFlagAttributes();
         startPreviewCarousel();
         initiateSockets();
     })
@@ -215,6 +217,52 @@ function generateSelectFlags() {
         </div>`
     });
     return flagHTML;
+}
+
+function generateFlagAttributes() {
+    let flagHTML='';
+    
+    flagHTML+=`
+    <table>
+    <tr>
+        <th>Flagga</th>
+        <th>Behöver nummer</th>
+        <th>Kan Blinka</th>
+        <th>Prio</th>
+        <th>Tillåt spara</th>
+        <th>Pausar flaggor</th>
+        <th>Alla skärmar</th>
+        <th>Är signalflagga</th>
+    </tr>
+    `
+    flagsSchema.forEach((flag, id) => {
+        flagHTML+='<tr>'
+        Object.keys(flag).forEach(key=> {
+            if (typeof(flag[key]) == "boolean") {
+                flagHTML+=`<td><input onchange="changeFlagParameter(this,{type:'checkbox'})" type="checkbox" data-row="${id}" data-param="${key}" ${(flag[key])?'checked':''}></td>`
+            } else {
+                flagHTML+=`<td onclick="this.contentEditable=true;this.focus()" onblur="changeFlagParameter(this)" data-row="${id}" data-param="${key}">${flag[key]}</td>`
+            }
+            
+        })
+        flagHTML+='</tr>'
+    })
+    flagHTML+='</table>'
+    return flagHTML;
+}
+
+function changeFlagParameter(cell,{type}=0) {
+    // console.dir(cell)
+    if (type=='checkbox') {
+        flagsSchema[cell.dataset.row][cell.dataset.param] = cell.checked;
+        // console.log(`changed ${cell.dataset.param} on index ${cell.dataset.row} in flagSchema to ${cell.checked}`)
+    } else {
+        // console.log(`New value: ${cell.innerText} in ${cell.dataset.param} (index ${cell.dataset.row} in flagSchema)`)
+        flagsSchema[cell.dataset.row][cell.dataset.param] = cell.innerText;
+        cell.contentEditable=false;
+    }
+    selectFlagWrapperElement.innerHTML=generateSelectFlags();
+    socket.emit('changeFlagAttributes',flagsSchema);
 }
 
 function showToast(msg,color) {

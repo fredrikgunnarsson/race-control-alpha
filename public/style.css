@@ -332,6 +332,27 @@ nav {
     width: 6rem;
     text-align: center;
 }
+.parameters .flag-attributes {
+    font-size: .8rem;
+    padding-top:40px;
+}
+table {
+    border-collapse: collapse;
+}
+th {
+    padding:10px;
+}
+tr {
+    
+}
+td {
+    padding:7px;
+    border: 1px solid #777;
+}
+td[contenteditable=true] {
+    background: white;
+    color:#333;
+}
 .selected {
     box-shadow:0 0 0 6px rgb(255, 155, 0), 7px 7px 12px 10px rgba(97, 58, 0, 0.6);
 }
@@ -355,7 +376,7 @@ nav {
 }
 
 svg.track {
-    height: 75%;
+    padding: 5px;
 }
 .path-track {
     color:white;

@@ -2,10 +2,13 @@ let express = require('express');
 let app = express();
 let http = require('http').createServer(app);
 let io = require('socket.io')(http);
+let fs = require('fs');
 
 app.use('/', express.static('public'))
 
-const {flagsSchema} = require('./model/flagsSchema');
+// const {flagsSchema} = require('./model/flagsSchema');
+let flagsModel = JSON.parse(fs.readFileSync('./model/flags.json'));
+
 
 let PORT = process.env.PORT || 3009;
 let screens = [];
@@ -97,7 +100,7 @@ let config = {
 //ROUTES
 
 app.get('/api/flags',(req,res,next)=>{
-    res.json(flagsSchema)
+    res.json(flagsModel)
 });
 app.get('/flag',(req,res) => {
     res.sendFile(__dirname + '/public/flag.html')
@@ -143,7 +146,7 @@ io.on('connection', socket => {
     })
 
     socket.on('selectFlag',({clickedFlag,blink,number})=>{
-        let flagAttributes = flagsSchema.find(flag => flag.name==clickedFlag);
+        let flagAttributes = flagsModel.find(flag => flag.name==clickedFlag);
         let selectedScreen = sections.find(el=>el.active);
         let allActiveScreens = sections.filter(screen => screen.clients.length > 0);
         let flagIndex = (selectedScreen) ? selectedScreen.flags.findIndex(flag=>flag.name == clickedFlag) : undefined;
@@ -188,7 +191,7 @@ io.on('connection', socket => {
         if (flagAttributes.isSignal) {
             if(flagAttributes.pause) {
                 let otherFlags = selectedScreen.flags.filter(flag => {
-                    return flagsSchema.find(el => el.name == flag.name).save
+                    return flagsModel.find(el => el.name == flag.name).save
                 })
                 selectedScreen.pausedFlags= [...otherFlags];
                 console.log(otherFlags);
@@ -223,7 +226,7 @@ io.on('connection', socket => {
         }
         function getLowestPrio() {
             let flagPrios =  selectedScreen.flags.map(flag => {
-                return flagsSchema.find(el => el.name==flag.name).prio
+                return flagsModel.find(el => el.name==flag.name).prio
             })
             return Math.min(...flagPrios);
         }
@@ -261,6 +264,9 @@ io.on('connection', socket => {
         updateClient();
         // io.emit('changeCarouselSpeedServer',config.shiftTime);
     }) 
+    socket.on('changeFlagAttributes',(newFlagModel)=>{
+        fs.writeFileSync('./model/flags.json', JSON.stringify(newFlagModel))
+    })
 
 })
 
