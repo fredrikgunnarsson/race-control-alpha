@@ -200,12 +200,13 @@ nav {
     transition:.1s ease-in-out;
 }
 .select-flag:hover, .preview-screen:hover {
-    transform:scale(1.05);
+    transform:scale(0.95);
 }
 .blink {
     display:none;
     width: 65px;
     height: 65px;
+    padding:16px;
     background: #ffffff;
     color: black;
     position: absolute;
@@ -214,7 +215,7 @@ nav {
     font-size: 2rem;
     font-weight: 400;
     text-align: center;
-    line-height: 61px;
+    line-height: 45px;
     transform: translate(50%,-50%);
     border-radius: 50%;
     box-shadow: 5px 5px 19px -3px #11414b;
@@ -251,47 +252,44 @@ nav {
     pointer-events: none;
 }
 .all-screen:after {
-    content: 'ALLA SEKTIONER';
-    background-color: black;
-    padding: 10px;
+    content: '';
+    background-image: url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg' height='512pt' viewBox='0 0 512 512' width='512pt'%3E%3Cpath d='m458.667969 0h-405.335938c-29.394531 0-53.332031 23.914062-53.332031 53.332031v405.335938c0 29.417969 23.9375 53.332031 53.332031 53.332031h405.335938c29.394531 0 53.332031-23.914062 53.332031-53.332031v-405.335938c0-29.417969-23.9375-53.332031-53.332031-53.332031zm10.664062 53.332031v181.335938h-192v-192h181.335938c5.886719 0 10.664062 4.796875 10.664062 10.664062zm-416-10.664062h181.335938v192h-192v-181.335938c0-5.867187 4.777343-10.664062 10.664062-10.664062zm-10.664062 416v-181.335938h192v192h-181.335938c-5.886719 0-10.664062-4.796875-10.664062-10.664062zm416 10.664062h-181.335938v-192h192v181.335938c0 5.867187-4.777343 10.664062-10.664062 10.664062zm0 0'/%3E%3C/svg%3E");
+    background-size: contain;
+    padding: 7px;
     position: absolute;
-    top: 0px;
-    left: 0px;
-    font-size: .9rem;
-    opacity: .75;
-    right: 0px;
+    top: -17px;
+    right: 3px;
     pointer-events: none;
 }
 .pause:after {
-    content: 'PAUSE';
-    background-color: black;
-    padding: 10px;
+    content: '';
+    background-image: url("data:image/svg+xml,%3Csvg id='Capa_1' enable-background='new 0 0 565.648 565.648' height='512' viewBox='0 0 565.648 565.648' width='512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m282.824 0c-155.947 0-282.824 126.877-282.824 282.824s126.877 282.824 282.824 282.824 282.824-126.877 282.824-282.824-126.877-282.824-282.824-282.824zm-35.353 388.883h-70.706v-212.118h70.706zm141.412 0h-70.706v-212.118h70.706z'/%3E%3C/svg%3E");
+    background-size:contain;
+    padding: 7px;
     position: absolute;
-    bottom: 4rem;
-    left: 0px;
-    font-size: .8rem;
-    opacity: .75;
+    top: -17px;
+    right: 40px;
     pointer-events: none;
 }
 .signal:after {
-    content: 'SIGNAL';
-    background-color: black;
-    padding: 10px;
+    content: '';
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' id='Capa_1' x='0px' y='0px' viewBox='0 0 512 512' style='enable-background:new 0 0 512 512;' xml:space='preserve'%3E%3Cg%3E%3Cg%3E%3Cpath d='M501.609,384.603L320.543,51.265c-13.666-23.006-37.802-36.746-64.562-36.746c-26.76,0-50.896,13.74-64.562,36.746 c-0.103,0.176-0.19,0.352-0.293,0.528L10.662,384.076c-13.959,23.491-14.223,51.702-0.719,75.457 c13.535,23.769,37.919,37.948,65.266,37.948h360.544c27.347,0,52.733-14.179,66.267-37.948 C515.524,435.779,515.261,407.566,501.609,384.603z M225.951,167.148c0-16.586,13.445-30.03,30.03-30.03 c16.586,0,30.03,13.445,30.03,30.03v120.121c0,16.584-13.445,30.03-30.03,30.03s-30.03-13.447-30.03-30.03V167.148z M255.981,437.421c-24.839,0-45.046-20.206-45.046-45.046c0-24.839,20.206-45.045,45.046-45.045 c24.839,0,45.045,20.206,45.045,45.045C301.027,417.214,280.821,437.421,255.981,437.421z'/%3E%3C/g%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3C/svg%3E");
+    background-size:contain;
+    padding: 7px;
     position: absolute;
-    bottom: 1.8rem;
-    left: 2rem;
-    font-size: .8rem;
-    opacity: .75;
+    top: -17px;
+    right: 22px;
     pointer-events: none;
 }
 .prio {
-    background-color: black;
-    padding: 10px;
+    background-color: #000000;
+    padding: 6px;
+    border-radius: 50% 50% 50% 0%;
+    line-height: 0.3;
     position: absolute;
-    bottom: 1.8rem;
-    left: 0px;
-    font-size: .8rem;
-    opacity: .75;
+    top: -17px;
+    left: 3px;
+    font-size: 8px;
     pointer-events: none;
 }
 .parameters {
