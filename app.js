@@ -194,7 +194,7 @@ io.on('connection', socket => {
                     return flagsModel.find(el => el.name == flag.name).save
                 })
                 selectedScreen.pausedFlags= [...otherFlags];
-                console.log(otherFlags);
+                // console.log(otherFlags);
                 if (otherFlags.length > 0) showToast(`Flaggor pausade`);
             }
             removeAllScreenFlags()
@@ -266,6 +266,7 @@ io.on('connection', socket => {
     }) 
     socket.on('changeFlagAttributes',(newFlagModel)=>{
         fs.writeFileSync('./model/flags.json', JSON.stringify(newFlagModel))
+        flagsModel = newFlagModel;
     })
 
 })
