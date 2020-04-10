@@ -3,8 +3,15 @@
 [x] flaggskärm: öka storlek på siffra på flaggskärm
 
 [x] Inställningarna visas inte vad dom är inställda på
-[] Flaggorna ska ha stöd för tresiffriga nummer
-[] Anpassa sifferstorlek utifrån om det 1, 2 eller 3 siffror i bredd
+[x] Flaggorna ska ha stöd för tresiffriga nummer
+[x] Anpassa sifferstorlek utifrån om det 1, 2 eller 3 siffror i bredd
 [x] Anpassa flaggboxarna efter flaggornas storlek
-[] Lägg in flaggtabellen i Settings så att man kan ändra
+[x] Lägg in flaggtabellen i Settings så att man kan ändra
 [] Dynamiskt antal skärmar, lägg in i inställningar
+
+[] Samma nummerflagga ska kunna visas två gånger, med olika nummer
+[] Om bara en flagga visas så försvinner den om man klickar, annars krävs nummer
+
+[] Alla flaggor i helformat, nummer ovanpå. eventuellt ändra så att man kan bestämma textfärg
+[] SC 60 flaggan ska vara SC enbart
+[] Flaggornas information i en info-ruta istället för många ikoner
