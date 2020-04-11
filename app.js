@@ -149,7 +149,9 @@ io.on('connection', socket => {
         let flagAttributes = flagsModel.find(flag => flag.name==clickedFlag);
         let selectedScreen = sections.find(el=>el.active);
         let allActiveScreens = sections.filter(screen => screen.clients.length > 0);
-        let flagIndex = (selectedScreen) ? selectedScreen.flags.findIndex(flag=>flag.name == clickedFlag) : undefined;
+        let flagIndex = (selectedScreen) 
+            ? selectedScreen.flags.findIndex(flag => (flag.name == clickedFlag && flag.number == number) ) 
+            : undefined;
 
         if (!selectedScreen) {
             showToast('Ingen sektion vald. Klicka på en sektion','orange');
@@ -165,9 +167,13 @@ io.on('connection', socket => {
                 }
             } else if (blink && !isFlagSelected().blink) {
                 selectedScreen.flags[flagIndex].blink=true;
-            } else if (number) {
-                showToast('Kommande funktionalitet: Lägga till två nummer');
-                removeScreenFlag();
+            // } else if (number) {
+            //     if (isFlagSelected().number != number) {
+            //         showToast('Lägga till två nummer');
+            //         addFlagToScreen();
+            //     } else {
+            //         removeScreenFlag();
+            //     }
             } else if (flagAttributes.pause) {
                 selectedScreen.flags = [...selectedScreen.pausedFlags]
             } else {
@@ -222,7 +228,7 @@ io.on('connection', socket => {
             selectedScreen.flags.splice(flagIndex,1)
         }
         function isFlagSelected() { 
-            return selectedScreen.flags.find(flag=>flag.name == clickedFlag);
+            return selectedScreen.flags.find(flag => (flag.name == clickedFlag && flag.number==number) );
         }
         function getLowestPrio() {
             let flagPrios =  selectedScreen.flags.map(flag => {
