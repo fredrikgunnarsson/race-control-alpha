@@ -123,17 +123,17 @@ nav {
     background-repeat:no-repeat;
 }
 .carNum {
-    padding: 0.5rem;
     pointer-events: none;
     font-size: 1.6rem;
-    line-height: 0;
+    background:black;
+    color:yellow;
+    line-height: 1;
 }
 .flag-display .carNum {
     font-size: 17vw;
     position: absolute;
     font-weight: 900;
     left: 59%;
-    line-height: 0;
     top: 50%;
     transform: translateY(-50%);
 }
