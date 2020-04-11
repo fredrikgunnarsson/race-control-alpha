@@ -9,9 +9,9 @@
 [x] Lägg in flaggtabellen i Settings så att man kan ändra
 [] Dynamiskt antal skärmar, lägg in i inställningar
 
-[] Samma nummerflagga ska kunna visas två gånger, med olika nummer
+x[] Samma nummerflagga ska kunna visas två gånger, med olika nummer
 [] Om bara en flagga visas så försvinner den om man klickar, annars krävs nummer
 
-[] Alla flaggor i helformat, nummer ovanpå. eventuellt ändra så att man kan bestämma textfärg
+x[] Alla flaggor i helformat, nummer ovanpå. eventuellt ändra så att man kan bestämma textfärg
 [x] SC 60 flaggan ska vara SC enbart
 [] Flaggornas information i en info-ruta istället för många ikoner

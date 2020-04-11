@@ -6,101 +6,35 @@ let fs = require('fs');
 
 app.use('/', express.static('public'))
 
-// const {flagsSchema} = require('./model/flagsSchema');
-let flagsModel = JSON.parse(fs.readFileSync('./model/flags.json'));
-
-
 let PORT = process.env.PORT || 3009;
-let screens = [];
-let sections = [
-    {
-        section:0,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:1,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:2,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:3,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:4,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:5,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:6,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:7,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:8,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:9,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:10,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:11,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-    {
-        section:12,
-        clients:[],
-        flags:[],
-        active:false,
-    },
-];
+
 let config = {
     shiftTime:1700,
     blinkTime:500,
+    numberOfScreens:13,
 }
+
+// const {flagsSchema} = require('./model/flagsSchema');
+let flagsModel = JSON.parse(fs.readFileSync('./model/flags.json'));
+// let sectionsModel = JSON.parse(fs.readFileSync('./model/sections.json'));
+let sections = [...Array(config.numberOfScreens)].map((el,i)=>{ 
+    return {
+    section:i,
+    clients:[],
+    flags:[],
+    active:false}
+})
+
+
+
+let screens = [];
+// let sections = sectionsModel;
+
 
 //ROUTES
 
 app.get('/api/flags',(req,res,next)=>{
-    res.json(flagsModel)
+    res.json({flagsModel,sections})
 });
 app.get('/flag',(req,res) => {
     res.sendFile(__dirname + '/public/flag.html')
@@ -268,7 +202,10 @@ io.on('connection', socket => {
     socket.on('changeBlinkSpeed',(ms)=>{
         config.blinkTime = ms;
         updateClient();
-        // io.emit('changeCarouselSpeedServer',config.shiftTime);
+    }) 
+    socket.on('changeNumberOfScreens',(num)=>{
+        config.numberOfScreens = num;
+        updateClient();
     }) 
     socket.on('changeFlagAttributes',(newFlagModel)=>{
         fs.writeFileSync('./model/flags.json', JSON.stringify(newFlagModel))

@@ -23,18 +23,22 @@ const numberDisplayElement = document.querySelector('.number-display');
 const enterNumberModalElement = document.querySelector('.enter-number-modal');
 const enterNumberInput = document.querySelector('#enter-number');
 const submitNumberBtn = document.querySelector('#submit-number');
+const sectionScreensElement = document.querySelector('.section-screens-wrapper');
 const parametersModal = document.querySelector('.parameters');
 const parameterShiftTime = document.querySelector('.settingFlaggrotation');
 const parameterblinkTime = document.querySelector('.settingBlinkhastighet');
+const parameterNumberOfScreens = document.querySelector('.settingAntalSkärmar');
 const parameterFlagAttributes = document.querySelector('.flag-attributes');
 
 (()=> {
     return fetch('/api/flags')
     .then(res => res.json())
     .then(data => {
-        flagsSchema = data;
+        flagsSchema = data.flagsModel;
+        sectionsSchema = data.sections;
         selectFlagWrapperElement.innerHTML=generateSelectFlags();
         parameterFlagAttributes.innerHTML=generateFlagAttributes();
+        sectionScreensElement.innerHTML=generateSectionScreens();
         startPreviewCarousel();
         initiateSockets();
     })
@@ -99,16 +103,21 @@ function changeBlinkSpeed(ms) {
     showToast(`Ny blinkhastighet ${ms}ms`,'green')
     socket.emit('changeBlinkSpeed',ms)
 }
+function changeNumberOfScreens(num) {
+    showToast(`${num} skärmar`)
+    socket.emit('changeNumberOfScreens',num)
+}
 function updateSettings(config) {
     let styles = [...document.styleSheets[0].cssRules];
 
     styles
         .find(res=>res.selectorText==".blink-animation")
-        .style.animationDuration=config.blinkTime+'ms'
-    
+        .style.animationDuration=config.blinkTime+'ms' ;
+
     carouselMs = config.shiftTime;
     parameterShiftTime.value=config.shiftTime;
     parameterblinkTime.value=config.blinkTime;
+    parameterNumberOfScreens.value=config.numberOfScreens;
 }
 
 function drawControlScreen() {
@@ -217,6 +226,21 @@ function generateSelectFlags() {
         </div>`
     });
     return flagHTML;
+}
+
+function generateSectionScreens() {
+    let sectionHTML = '';
+    sectionsSchema.forEach(section => {
+        if(section.section==0) return;
+
+        sectionHTML += `
+        <div class="btn section-screen" data-btn="section-btn" data-section="${section.section}">
+            <div class="carNum"></div>
+            <div class="sectorLabel">${section.section}</div>
+        </div>
+        `
+    })
+    return sectionHTML;
 }
 
 function generateFlagAttributes() {
