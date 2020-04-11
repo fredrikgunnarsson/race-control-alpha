@@ -342,8 +342,9 @@ table {
 th {
     padding:10px;
 }
-tr {
-    
+tr:hover {
+   color:yellow;
+   opacity:.7; 
 }
 td {
     padding:7px;
