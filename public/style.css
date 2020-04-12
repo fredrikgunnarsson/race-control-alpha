@@ -125,15 +125,15 @@ nav {
 .carNum {
     pointer-events: none;
     font-size: 1.6rem;
-    background:black;
-    color:yellow;
+    background:white;
+    color:black;
     line-height: 1;
 }
 .flag-display .carNum {
     font-size: 17vw;
     position: absolute;
     font-weight: 900;
-    left: 59%;
+    right: 1%;
     top: 50%;
     transform: translateY(-50%);
 }

@@ -14,12 +14,14 @@ app.use(cookieParser())
 
 let PORT = process.env.PORT || 3009;
 
-let config = {
-    shiftTime:1700,
-    blinkTime:500,
-    numberOfScreens:13,
-}
+// let config = {
+//     shiftTime:1700,
+//     blinkTime:500,
+//     numberOfScreens:13,
+// }
 
+let getConfig = () => JSON.parse(fs.readFileSync('./model/Config.json'));
+let config = getConfig();
 let Users = JSON.parse(fs.readFileSync('./model/Users.json'));
 let flagsModel = JSON.parse(fs.readFileSync('./model/flags.json'));
 let sections = [...Array(config.numberOfScreens)].map((el,i)=>{ 
@@ -237,17 +239,20 @@ io.on('connection', socket => {
     })
 
     socket.on('changeCarouselSpeed',(ms)=>{
-        config.shiftTime = ms;
+        config.shiftTime = Number(ms);
+        updateConfigFile(config)
         updateClient();
         // io.emit('changeCarouselSpeedServer',config.shiftTime);
     }) 
     socket.on('changeBlinkSpeed',(ms)=>{
-        config.blinkTime = ms;
+        config.blinkTime = Number(ms);
+        updateConfigFile(config)
         updateClient();
     }) 
     socket.on('changeNumberOfScreens',(num)=>{
-        config.numberOfScreens = num;
-        updateClient();
+        config.numberOfScreens = Number(num);
+        updateConfigFile(config)
+        // updateClient();
     }) 
     socket.on('changeFlagAttributes',(newFlagModel)=>{
         fs.writeFileSync('./model/flags.json', JSON.stringify(newFlagModel))
@@ -263,6 +268,9 @@ function updateClient() {
 }
 function showToast(msg, color) {
     io.emit('showToast',{msg, color})
+}
+function updateConfigFile(config) {
+    fs.writeFileSync('./model/Config.json',JSON.stringify(config))
 }
 
 setInterval(() => {
