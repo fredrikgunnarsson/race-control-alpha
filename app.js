@@ -1,10 +1,16 @@
 let express = require('express');
 let app = express();
+let cookieParser = require('cookie-parser');
 let http = require('http').createServer(app);
 let io = require('socket.io')(http);
 let fs = require('fs');
+let jwt = require('jsonwebtoken');
+
+let {signToken,verifyToken} = require('./auth');
 
 app.use('/', express.static('public'))
+app.use(express.json());
+app.use(cookieParser())
 
 let PORT = process.env.PORT || 3009;
 
@@ -14,9 +20,8 @@ let config = {
     numberOfScreens:13,
 }
 
-// const {flagsSchema} = require('./model/flagsSchema');
+let Users = JSON.parse(fs.readFileSync('./model/Users.json'));
 let flagsModel = JSON.parse(fs.readFileSync('./model/flags.json'));
-// let sectionsModel = JSON.parse(fs.readFileSync('./model/sections.json'));
 let sections = [...Array(config.numberOfScreens)].map((el,i)=>{ 
     return {
     section:i,
@@ -25,27 +30,64 @@ let sections = [...Array(config.numberOfScreens)].map((el,i)=>{
     active:false}
 })
 
-
-
 let screens = [];
-// let sections = sectionsModel;
+
+
+
+// MIDDLEWARE
+
+function protectedRoute (req,res,next) {
+    let {user,pass} = verifyToken(req.cookies.race,'secret');
+    let isUser = Users.find(rec => rec.name == user);
+
+    if (isUser && isUser.pass == pass) {
+        console.log('Token verified (protectedRoute)');
+        let token = jwt.sign({pass:pass, user:user},'secret',{expiresIn:'1d'})
+        res.cookie('race',token,{ maxAge: 1000*60*60*24*365});
+        next();
+    } else {
+        console.log('Invalid token (protectedRoute)');
+        res.send('404 - invalid token')
+    }
+}
 
 
 //ROUTES
 
-app.get('/api/flags',(req,res,next)=>{
+app.post('/auth', (req,res) => {
+    let {pass,user} = req.body;
+    let isUser = Users.find(rec => rec.name == user);
+
+    if (!isUser) {
+        res.json({error:'Användare existerar inte'})
+        return
+    }
+    if (isUser.pass != pass) {
+        res.json({error:'Fel lösenord'})
+        return
+    }
+
+    let token = jwt.sign({pass:pass, user:user},'secret',{expiresIn:'1d'})
+    
+    res.cookie('race',token,{ maxAge: 1000*60*60*24*365});
+    res.json({redirect:'/shortcuts'})
+});
+app.get('/api/flags', protectedRoute ,(req,res,next)=>{
     res.json({flagsModel,sections})
 });
-app.get('/flag',(req,res) => {
-    res.sendFile(__dirname + '/public/flag.html')
+app.get('/flag', protectedRoute ,(req,res) => {
+    res.sendFile(__dirname + '/views/flag.html')
 })
-app.get('/section/:id',(req,res)=>{
-    res.sendFile(__dirname + '/public/flag.html')
+app.get('/section/:id', protectedRoute, (req,res)=>{
+    res.sendFile(__dirname + '/views/flag.html')
 })
-app.get('/kontroll',(req,res)=>{
-    res.sendFile(__dirname + '/public/kontroll.html')
+app.get('/kontroll', protectedRoute, (req,res)=>{
+    res.sendFile(__dirname + '/views/kontroll.html')
 })
-app.get('/screens',(req,res)=>{
+app.get('/shortcuts', protectedRoute, (req,res)=>{
+    res.sendFile(__dirname + '/views/shortcuts.html')
+})
+app.get('/screens', protectedRoute,(req,res)=>{
     res.header("Content-Type",'application/json');
     res.send(JSON.stringify(sections, null, 4));
 })

@@ -6,27 +6,102 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Test Socket IO</title>
     <link rel="stylesheet" href="../style.css">
-    
-    <script src="../socket.io/socket.io.js"></script>
-</head>
-<style>
 
-</style>
+    <style>
+        body {
+            background:linear-gradient(28deg, #000,#333);
+            padding-top:15vh;
+            color:white;
+            min-height:100vh;
+        }
+        h2 {
+            text-align:center;
+            padding-bottom:40px;
+        }
+        section {
+            display:flex;
+            flex-direction: column;
+            align-items:center;
+        }
+        input {
+            padding:8px;
+            width:100%;
+            border:0px;
+        }
+        input[type=button] {
+            width:auto;
+            cursor: pointer;
+            margin-top:10px;
+            padding:10px 20px;
+            font-size:1rem;
+
+        }
+        .login {
+            width:250px;
+        }
+        .login > div {
+            margin:10px;
+        }
+        .label {
+            display:block;
+            width:100px;
+            padding:4px 0px;
+        }
+        .error {
+            color:lightcoral;
+            font-size:.7rem;
+        }
+    </style>
+</head>
+
+
 
 <body>
-<h2><a href="/kontroll">Kontrollskärm</a></h2>
-<h2><a href="/section/0">Sektion 0 (huvudskärm)</a></h2>
-<h2><a href="/section/1">Sektion 1</a></h2>
-<h2><a href="/section/2">Sektion 2</a></h2>
-<h2><a href="/section/3">Sektion 3</a></h2>
-<h2><a href="/section/4">Sektion 4</a></h2>
-<h2><a href="/section/5">Sektion 5</a></h2>
-<h2><a href="/section/6">Sektion 6</a></h2>
-<h2><a href="/section/7">Sektion 7</a></h2>
-<h2><a href="/section/8">Sektion 8</a></h2>
-<h2><a href="/section/9">Sektion 9</a></h2>
-<h2><a href="/section/10">Sektion 10</a></h2>
-<h2><a href="/section/11">Sektion 11</a></h2>
-<h2><a href="/section/12">Sektion 12</a></h2>
+<h2>Login</h2>
+<section>
+    <div class="login">
+        <div class="user">
+            <span class="label">Email</span><input id="email" onkeydown="state.user=this.value" type="text" />
+        </div>
+        <div class="password">
+            <span class="label">Lösenord</span><input onkeydown="state.pass=this.value" type="password" />
+        </div>
+        <div class="button">
+            <input onclick="verifyLogin()" type="button" value="Logga in">
+        </div>
+        <div class="error"></div>
+    </div>
+</section>
+    
+
+
+<script>
+    let state = {user:'',pass:''}
+
+    document.addEventListener('keypress',(e) => {
+        if (e.keyCode == 13) verifyLogin();
+    })
+    document.querySelector('#email').focus();
+
+    function verifyLogin () {
+        fetch('/auth', {
+            method:'POST',
+            body:JSON.stringify({pass:state.pass,user:state.user}),
+            headers: {
+                'content-type':'application/json'
+            }
+        })
+            .then(res => res.json())
+            .then(res => handleResult(res))
+    }
+
+    function handleResult(res) {
+        if (res.error) document.querySelector('.error').innerText=res.error;
+        if(res.redirect) window.location=res.redirect;
+        console.log(res);
+    }
+</script>
 </body>
+
+
 </html>
