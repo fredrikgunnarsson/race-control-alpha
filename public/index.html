@@ -61,10 +61,10 @@
 <section>
     <div class="login">
         <div class="user">
-            <span class="label">Email</span><input id="email" onkeydown="state.user=this.value" type="text" />
+            <span class="label">Email</span><input id="email" onkeypress="state.user=this.value" type="text" />
         </div>
         <div class="password">
-            <span class="label">Lösenord</span><input onkeydown="state.pass=this.value" type="password" />
+            <span class="label">Lösenord</span><input onkeypress="state.pass=this.value" type="password" />
         </div>
         <div class="button">
             <input onclick="verifyLogin()" type="button" value="Logga in">
