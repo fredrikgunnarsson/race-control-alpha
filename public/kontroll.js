@@ -162,6 +162,8 @@ function initiateSockets() {
         // console.log('updateClient...');
         serverState=sections;
 
+        sectionsSchema = sections;
+        sectionScreensElement.innerHTML=generateSectionScreens();
         updateSettings(config)
         drawControlScreen();
     })
@@ -170,6 +172,13 @@ function initiateSockets() {
     })
     // socket.on('changeCarouselSpeedServer',(ms)=>{
     //     carouselMs = ms;
+    // })
+
+
+    // socket.on('updateClientSections', (sections)=> {
+    //     sectionsSchema = sections;
+    //     sectionScreensElement.innerHTML=generateSectionScreens();
+        
     // })
 }
 
@@ -213,7 +222,7 @@ function generateSelectFlags() {
             <div class="${(flag.isSignal) ? 'signal' : null}"></div>
             <div class="${(flag.pause) ? 'pause' : null}"></div>
             <div class="${(flag.allScreen) ? 'all-screen' : null}"></div>
-            <div class="${(flag.save) ? 'save' : null}"></div>
+            <div class="${(flag.canSave) ? 'save' : null}"></div>
             <div 
                 data-btn="blink-btn" 
                 data-flag="${flag.name}" 

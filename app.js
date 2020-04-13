@@ -3,8 +3,14 @@ let app = express();
 let cookieParser = require('cookie-parser');
 let http = require('http').createServer(app);
 let io = require('socket.io')(http);
+
+let mongoose = require('mongoose');
 let fs = require('fs');
 let jwt = require('jsonwebtoken');
+
+let Flag = require('./model/Flag');
+let User = require('./model/User');
+let Config = require('./model/Config')
 
 let {signToken,verifyToken} = require('./auth');
 
@@ -12,7 +18,47 @@ app.use('/', express.static('public'))
 app.use(express.json());
 app.use(cookieParser())
 
+require('dotenv').config()
 let PORT = process.env.PORT || 3009;
+const DBCONNECTION = process.env.DBCONNECTION || '';
+const SECRET = process.env.SECRET || '';
+
+//DB CONNECT
+mongoose.connect(DBCONNECTION,{useNewUrlParser:true,useUnifiedTopology: true},()=>
+    console.log('connected to db')
+);
+
+// const post = new Flag({
+//     name: 'flag-vsc',
+//     needNumber: false,
+//     canBlink: true,
+//     prio: 3,
+//     canSave: false,
+//     pause: true,
+//     allScreen: false,
+//     isSignal: true
+// })
+// post.save().then(res=>console.log(res))
+
+
+
+// const post = new Config({
+//     shiftTime: 700,
+//     blinkTime: 350,
+//     numberOfScreens:12
+// })
+// post.save().then(res=>console.log(res))
+
+// const post = new User({
+//     name: 'admin',
+//     pass: 'admin',
+// })
+// post.save().then(res=>console.log(res))
+
+// User.find({}).then(res=>console.log(res))
+// Flag.deleteMany({}).then(data=>console.log(data));
+// Flag.insertMany({}, (docs)=>console.log(docs))
+
 
 // let config = {
 //     shiftTime:1700,
@@ -20,18 +66,52 @@ let PORT = process.env.PORT || 3009;
 //     numberOfScreens:13,
 // }
 
-let getConfig = () => JSON.parse(fs.readFileSync('./model/Config.json'));
-let config = getConfig();
-let Users = JSON.parse(fs.readFileSync('./model/Users.json'));
-let flagsModel = JSON.parse(fs.readFileSync('./model/flags.json'));
-let sections = [...Array(config.numberOfScreens)].map((el,i)=>{ 
-    return {
-    section:i,
-    clients:[],
-    flags:[],
-    active:false}
-})
 
+
+
+
+
+let config
+let sections
+let flagsModel
+let users
+Config.find({}).then(data => {
+    config = data[0];
+    sections = createSections(config.numberOfScreens);
+    Flag.find({}).then(data => {
+        flagsModel = data.map(x=> ({
+            name:x.name,
+            needNumber:x.needNumber,
+            canBlink:x.canBlink,
+            prio:x.prio,
+            canSave:x.canSave,
+            pause:x.pause,
+            allScreen:x.allScreen,
+            isSignal:x.isSignal
+        }))
+        
+        User.find({}).then(data => {
+            users = data;
+            startServer();
+        })
+    })
+});
+
+
+
+
+// let getConfig = () => JSON.parse(fs.readFileSync('./model/Config.json'));
+// let config = getConfig();
+// let sections = [...Array(config.numberOfScreens)].map((el,i)=>{ 
+//     return {
+//     section:i,
+//     clients:[],
+//     flags:[],
+//     active:false}
+// })
+// let users = JSON.parse(fs.readFileSync('./model/Users.json'));
+// let flagsModel = JSON.parse(fs.readFileSync('./model/flags.json'));
+// console.log(flagsModel)
 let screens = [];
 
 
@@ -39,12 +119,12 @@ let screens = [];
 // MIDDLEWARE
 
 function protectedRoute (req,res,next) {
-    let {user,pass} = verifyToken(req.cookies.race,'secret');
-    let isUser = Users.find(rec => rec.name == user);
+    let {user,pass} = verifyToken(req.cookies.race,SECRET);
+    let isUser = users.find(rec => rec.name == user);
 
     if (isUser && isUser.pass == pass) {
         console.log('Token verified (protectedRoute)');
-        let token = jwt.sign({pass:pass, user:user},'secret',{expiresIn:'1d'})
+        let token = jwt.sign({pass:pass, user:user},SECRET,{expiresIn:'1d'})
         res.cookie('race',token,{ maxAge: 1000*60*60*24*365});
         next();
     } else {
@@ -58,7 +138,7 @@ function protectedRoute (req,res,next) {
 
 app.post('/auth', (req,res) => {
     let {pass,user} = req.body;
-    let isUser = Users.find(rec => rec.name == user);
+    let isUser = users.find(rec => rec.name == user);
 
     if (!isUser) {
         res.json({error:'Användare existerar inte'})
@@ -69,7 +149,7 @@ app.post('/auth', (req,res) => {
         return
     }
 
-    let token = jwt.sign({pass:pass, user:user},'secret',{expiresIn:'1d'})
+    let token = jwt.sign({pass:pass, user:user},SECRET,{expiresIn:'1d'})
     
     res.cookie('race',token,{ maxAge: 1000*60*60*24*365});
     res.json({redirect:'/shortcuts'})
@@ -95,7 +175,6 @@ app.get('/screens', protectedRoute,(req,res)=>{
 })
 
 //SOCKETS
-
 io.on('connection', socket => {
     console.log(new Date,`server connection initiated... id: ${socket.id}`)
     screens.push({id:socket.id})
@@ -171,11 +250,10 @@ io.on('connection', socket => {
             updateClient()
             return;
         }
-
         if (flagAttributes.isSignal) {
             if(flagAttributes.pause) {
                 let otherFlags = selectedScreen.flags.filter(flag => {
-                    return flagsModel.find(el => el.name == flag.name).save
+                    return flagsModel.find(el => el.name == flag.name).canSave
                 })
                 selectedScreen.pausedFlags= [...otherFlags];
                 // console.log(otherFlags);
@@ -217,8 +295,11 @@ io.on('connection', socket => {
     })
 
     socket.on('sectionUpdate',({section})=>{
-        let idx = sections.findIndex(el=>el.section==section);
-        if (idx>-1) sections[idx].clients.push(socket.id);
+        // let idx = sections.findIndex(el=>el.section==section);
+        // if (idx>-1) sections[idx].clients.push(socket.id);
+
+        let connectedSection = sections.find(el=>el.section==section);
+        if(connectedSection) connectedSection.clients.push(socket.id);
         showToast(`ny skärm (sektion: ${section})`);
         updateClient();
     })
@@ -252,33 +333,61 @@ io.on('connection', socket => {
     socket.on('changeNumberOfScreens',(num)=>{
         config.numberOfScreens = Number(num);
         updateConfigFile(config)
-        // updateClient();
+
+        if (num > 0 && num < sections.length) { 
+            sections.length=num;
+        } else {
+            let i = sections.length;
+            [...Array(num-sections.length)].forEach(el => {
+                sections.push({section:i++,clients:[],flags:[],active:false})
+            })
+        }
+        // io.emit('updateClientSections', sections)
+        
+        updateClient();
     }) 
     socket.on('changeFlagAttributes',(newFlagModel)=>{
-        fs.writeFileSync('./model/flags.json', JSON.stringify(newFlagModel))
         flagsModel = newFlagModel;
+        Flag.deleteMany({}).then(data => {
+            Flag.insertMany(flagsModel)
+        });
+        // fs.writeFileSync('./model/flags.json', JSON.stringify(newFlagModel))
     })
 
 })
-
 // HELPER FUNCTIONS
 
 function updateClient() {
+    // console.log(config)
     io.emit('updateClient',{sections, config})
 }
 function showToast(msg, color) {
     io.emit('showToast',{msg, color})
 }
 function updateConfigFile(config) {
-    fs.writeFileSync('./model/Config.json',JSON.stringify(config))
+    // Config.deleteMany({});
+    Config.updateOne({},config).then(data => {})
+
+    // fs.writeFileSync('./model/Config.json',JSON.stringify(config))
+}
+function createSections(num) {
+    return [...Array(num)].map((el,i)=>{ 
+        return {
+        section:i,
+        clients:[],
+        flags:[],
+        active:false}
+    })
 }
 
-setInterval(() => {
-    console.log('...');
-}, 3000);
 
 
-http.listen(PORT, ()=>{
-    console.log(`listening on port... ${PORT}`)
-});
+function startServer() {
+    http.listen(PORT, ()=>{
+        console.log(`listening on port... ${PORT}`)
+    });
 
+    setInterval(() => {
+        console.log('...');
+    }, 3000);
+}
