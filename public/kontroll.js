@@ -299,14 +299,21 @@ function changeFlagParameter(cell,{type}=0) {
 }
 
 function showToast(msg,color) {
+    let newWarning;
     let newEl = document.createElement('div');
     newEl.className="toast";
     newEl.innerText=msg;
     if (color) newEl.style.backgroundColor=color;
+    if (color=='red') {
+        newWarning = document.createElement('div');
+        newWarning.className="warning";
+        newWarning.innerText=msg;
+        document.querySelector('body').appendChild(newWarning);
+    }
     document.querySelector('body').appendChild(newEl);
     setTimeout(() => {
-        // document.querySelectorAll('.toast').forEach(el=>el.remove())
-        document.querySelector('.toast').remove();
+        if (newWarning) newWarning.remove();
+        newEl.remove();
     }, 2500);
 }
 

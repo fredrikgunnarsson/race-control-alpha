@@ -375,6 +375,23 @@ td[contenteditable=true] {
     animation-fill-mode:forwards;
     z-index:9999;
 }
+.warning {
+    position: fixed;
+    display: inline-block;
+    padding: 2rem 4rem;
+    background: red;
+    color: white;
+    top: 50vh;
+    left: 50%;
+    font-size: 1rem;
+    font-weight: 700;
+    transform: translate(-50%,-50%);
+    animation: warning ease-in-out 2.5s;
+    animation-iteration-count: 1;
+    animation-fill-mode:forwards;
+    z-index:9999;
+    pointer-events: none;
+}
 
 svg.track {
     padding: 5px;
@@ -485,6 +502,24 @@ input[type=number]::-webkit-outer-spin-button {
         }
     100% {
         transform:rotateX(-90deg);
+    }
+}
+
+@keyframes warning{
+    0% {
+        opacity:0;
+    }
+    3% {
+        opacity:0;
+    }
+    10% {
+        opacity:1;
+    }
+    90% {
+        opacity:1;
+        }
+    100% {
+        opacity:0;
     }
 }
 
