@@ -99,21 +99,7 @@ let users
     startServer();
 })()
 
-// let getConfig = () => JSON.parse(fs.readFileSync('./model/Config.json'));
-// let config = getConfig();
-// let sections = [...Array(config.numberOfScreens)].map((el,i)=>{ 
-//     return {
-//     section:i,
-//     clients:[],
-//     flags:[],
-//     active:false}
-// })
-// let users = JSON.parse(fs.readFileSync('./model/Users.json'));
-// let flagsModel = JSON.parse(fs.readFileSync('./model/flags.json'));
-// console.log(flagsModel)
 let screens = [];
-
-
 
 // MIDDLEWARE
 
