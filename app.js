@@ -129,13 +129,35 @@ function protectedRoute (req,res,next) {
         next();
     } else {
         console.log('Invalid token (protectedRoute)');
-        res.send('404 - invalid token')
+        res.status(401).send('Fel 401 - Du är ej inloggad, <a href="/login">Logga in här</a>');
+        res.end();
     }
 }
 
 
 //ROUTES
-
+app.get('/', protectedRoute, (req,res)=>{
+    res.sendFile(__dirname + '/views/shortcuts.html')
+})
+app.get('/api/flags', protectedRoute ,(req,res)=>{
+    res.json({flagsModel,sections})
+});
+app.get('/flag', protectedRoute ,(req,res) => {
+    res.sendFile(__dirname + '/views/flag.html')
+})
+app.get('/login', (req,res) => {
+    res.sendFile(__dirname + '/views/login.html')
+})
+app.get('/section/:id', protectedRoute, (req,res)=>{
+    res.sendFile(__dirname + '/views/flag.html')
+})
+app.get('/kontroll', protectedRoute, (req,res)=>{
+    res.sendFile(__dirname + '/views/kontroll.html')
+})
+app.get('/screens', protectedRoute,(req,res)=>{
+    res.header("Content-Type",'application/json');
+    res.send(JSON.stringify(sections, null, 4));
+})
 app.post('/auth', (req,res) => {
     let {pass,user} = req.body;
     let isUser = users.find(rec => rec.name == user);
@@ -152,26 +174,10 @@ app.post('/auth', (req,res) => {
     let token = jwt.sign({pass:pass, user:user},SECRET,{expiresIn:'1d'})
     
     res.cookie('race',token,{ maxAge: 1000*60*60*24*365});
-    res.json({redirect:'/shortcuts'})
+    res.json({redirect:'/'})
 });
-app.get('/api/flags', protectedRoute ,(req,res,next)=>{
-    res.json({flagsModel,sections})
-});
-app.get('/flag', protectedRoute ,(req,res) => {
-    res.sendFile(__dirname + '/views/flag.html')
-})
-app.get('/section/:id', protectedRoute, (req,res)=>{
-    res.sendFile(__dirname + '/views/flag.html')
-})
-app.get('/kontroll', protectedRoute, (req,res)=>{
-    res.sendFile(__dirname + '/views/kontroll.html')
-})
-app.get('/shortcuts', protectedRoute, (req,res)=>{
-    res.sendFile(__dirname + '/views/shortcuts.html')
-})
-app.get('/screens', protectedRoute,(req,res)=>{
-    res.header("Content-Type",'application/json');
-    res.send(JSON.stringify(sections, null, 4));
+app.get('*',(req,res) => {
+    res.status(404).send('404 - den här sidan existerar inte')
 })
 
 //SOCKETS
