@@ -75,12 +75,15 @@ let config
 let sections
 let flagsModel
 let users
-Config.find({}).then(data => {
-    config = data[0];
+
+(async () => {
+    const configData = await Config.find({});
+    config = configData[0];
     sections = createSections(config.numberOfScreens);
-    Flag.find({}).then(data => {
-        flagsModel = data.map(x=> ({
-            name:x.name,
+
+    const flagData = await Flag.find({});
+    flagsModel = flagData.map(x=> ({
+        name:x.name,
             needNumber:x.needNumber,
             canBlink:x.canBlink,
             prio:x.prio,
@@ -88,17 +91,13 @@ Config.find({}).then(data => {
             pause:x.pause,
             allScreen:x.allScreen,
             isSignal:x.isSignal
-        }))
-        
-        User.find({}).then(data => {
-            users = data;
-            startServer();
-        })
-    })
-});
+    }));
 
+    const userData = await User.find({});
+    users = userData;
 
-
+    startServer();
+})()
 
 // let getConfig = () => JSON.parse(fs.readFileSync('./model/Config.json'));
 // let config = getConfig();
