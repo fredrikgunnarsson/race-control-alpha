@@ -81,7 +81,7 @@ let users
     config = configData[0];
     sections = createSections(config.numberOfScreens);
 
-    const flagData = await Flag.find({});
+    const flagData = await Flag.find({}).sort({prio: 1});
     flagsModel = flagData.map(x=> ({
         name:x.name,
             needNumber:x.needNumber,
