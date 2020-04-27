@@ -5,7 +5,6 @@ let http = require('http').createServer(app);
 let io = require('socket.io')(http);
 
 let mongoose = require('mongoose');
-let fs = require('fs');
 let jwt = require('jsonwebtoken');
 
 let Flag = require('./model/Flag');
@@ -66,11 +65,6 @@ mongoose.connect(DBCONNECTION,{useNewUrlParser:true,useUnifiedTopology: true},()
 //     numberOfScreens:13,
 // }
 
-
-
-
-
-
 let config
 let sections
 let flagsModel
@@ -119,8 +113,8 @@ function protectedRoute (req,res,next) {
     }
 }
 
-
 //ROUTES
+
 app.get('/', protectedRoute, (req,res)=>{
     res.sendFile(__dirname + '/views/shortcuts.html')
 })
@@ -166,6 +160,7 @@ app.get('*',(req,res) => {
 })
 
 //SOCKETS
+
 io.on('connection', socket => {
     console.log(new Date,`server connection initiated... id: ${socket.id}`)
     screens.push({id:socket.id})
@@ -215,13 +210,6 @@ io.on('connection', socket => {
                 }
             } else if (blink && !isFlagSelected().blink) {
                 selectedScreen.flags[flagIndex].blink=true;
-            // } else if (number) {
-            //     if (isFlagSelected().number != number) {
-            //         showToast('Lägga till två nummer');
-            //         addFlagToScreen();
-            //     } else {
-            //         removeScreenFlag();
-            //     }
             } else if (flagAttributes.pause) {
                 selectedScreen.flags = [...selectedScreen.pausedFlags]
             } else {
@@ -247,7 +235,6 @@ io.on('connection', socket => {
                     return flagsModel.find(el => el.name == flag.name).canSave
                 })
                 selectedScreen.pausedFlags= [...otherFlags];
-                // console.log(otherFlags);
                 if (otherFlags.length > 0) showToast(`Flaggor pausade`);
             }
             removeAllScreenFlags()
@@ -286,9 +273,6 @@ io.on('connection', socket => {
     })
 
     socket.on('sectionUpdate',({section})=>{
-        // let idx = sections.findIndex(el=>el.section==section);
-        // if (idx>-1) sections[idx].clients.push(socket.id);
-
         let connectedSection = sections.find(el=>el.section==section);
         if(connectedSection) connectedSection.clients.push(socket.id);
         showToast(`ny skärm (sektion: ${section})`);
@@ -314,13 +298,14 @@ io.on('connection', socket => {
         config.shiftTime = Number(ms);
         updateConfigFile(config)
         updateClient();
-        // io.emit('changeCarouselSpeedServer',config.shiftTime);
     }) 
+
     socket.on('changeBlinkSpeed',(ms)=>{
         config.blinkTime = Number(ms);
         updateConfigFile(config)
         updateClient();
     }) 
+    
     socket.on('changeNumberOfScreens',(num)=>{
         config.numberOfScreens = Number(num);
         updateConfigFile(config)
@@ -333,7 +318,6 @@ io.on('connection', socket => {
                 sections.push({section:i++,clients:[],flags:[],active:false})
             })
         }
-        // io.emit('updateClientSections', sections)
         
         updateClient();
     }) 
@@ -342,25 +326,23 @@ io.on('connection', socket => {
         Flag.deleteMany({}).then(data => {
             Flag.insertMany(flagsModel)
         });
-        // fs.writeFileSync('./model/flags.json', JSON.stringify(newFlagModel))
     })
-
 })
+
 // HELPER FUNCTIONS
 
 function updateClient() {
-    // console.log(config)
     io.emit('updateClient',{sections, config})
 }
+
 function showToast(msg, color) {
     io.emit('showToast',{msg, color})
 }
-function updateConfigFile(config) {
-    // Config.deleteMany({});
-    Config.updateOne({},config).then(data => {})
 
-    // fs.writeFileSync('./model/Config.json',JSON.stringify(config))
+function updateConfigFile(config) {
+    Config.updateOne({},config).then(data => {})
 }
+
 function createSections(num) {
     return [...Array(num)].map((el,i)=>{ 
         return {
@@ -370,8 +352,6 @@ function createSections(num) {
         active:false}
     })
 }
-
-
 
 function startServer() {
     http.listen(PORT, ()=>{

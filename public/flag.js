@@ -34,17 +34,16 @@
         const flagDisplayElement = document.querySelector('.flag-display');
         const numberDisplayElement = document.querySelector('.number-display');
 
-
         // ===============================
         // SOCKETS
         // ===============================
 
-        
         socket.on('connect',()=>{
             clientScreen.id=socket.id;
             screenNameElement.innerHTML=socket.id;
             socket.emit('sectionUpdate',({section:clientScreen.section}))
         })
+
         socket.on('disconnect',()=>{
             screenNameElement.innerHTML='server disconnected!!!';
         })
@@ -53,10 +52,6 @@
             serverState=sections;
             updateSettings(config);
         })
-        // socket.on('changeCarouselSpeedServer',(ms)=>{
-        //     carouselMs = ms;
-        // })
-
         
         // ===============================
         // HELPER FUNCTIONS

@@ -56,16 +56,13 @@ document.addEventListener('click', (e)=>{
     else if (e.target.dataset.btn=='select-num-flag') {
         let flag = e.target.dataset.flag;
         let numEl = document.querySelector('.car-number-input input');
-        let isSelected = [...e.target.classList].includes('selected');
 
-        // if (numEl.value > 0 || isSelected) {
         if (numEl.value > 0) {
             socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:numEl.value})
             numEl.value=null;
         } else {
             showToast('Inget nummer. Fyll i nummer!','red');
         }
-        // socket.emit('selectFlag', {clickedFlag:flag,blink:true})
     }
     else if (e.target.dataset.btn=='blink-btn') {
         let flag = e.target.parentElement.dataset.flag;
@@ -75,17 +72,11 @@ document.addEventListener('click', (e)=>{
         clickSection(e);
     }
     else if (e.target.dataset.btn=='parameters-btn') {
-        // parametersModal.style.display='initial';
         parametersModal.classList.toggle('open')
     }
     else if (e.target.dataset.btn=='parameters-close-btn') {
-        // parametersModal.style.display='none';
         parametersModal.classList.toggle('open')
     }
-    else {
-        // console.log(e);
-    }
-
 })
 
 // ===============================
@@ -95,18 +86,22 @@ document.addEventListener('click', (e)=>{
 function clickSection(e) {
     socket.emit('clickSection',{section:e.target.dataset.section})
 }
+
 function changeCarouselSpeed(ms) {
     showToast(`Ny flaggrotation ${ms}ms`,'green')
     socket.emit('changeCarouselSpeed',ms)
 }
+
 function changeBlinkSpeed(ms) {
     showToast(`Ny blinkhastighet ${ms}ms`,'green')
     socket.emit('changeBlinkSpeed',ms)
 }
+
 function changeNumberOfScreens(num) {
     showToast(`${num} skärmar`)
     socket.emit('changeNumberOfScreens',num)
 }
+
 function updateSettings(config) {
     let styles = [...document.styleSheets[0].cssRules];
 
@@ -131,9 +126,7 @@ function drawControlScreen() {
             document.querySelector(`.select-flag.${flag.name}`)
                 .classList.add('selected', (flag.blink) ? 'blinkActive' : null);
         });
-    } else {
-        // previewScreenElement.innerHTML=`no active flag screens`;
-    }
+    } 
 
     serverState.forEach(el=>{
         let sectionEl =document.querySelector(`[data-section="${el.section}"]`);
@@ -155,31 +148,22 @@ function initiateSockets() {
         
         screenNameElement.innerHTML=socket.id;
     })
+    
     socket.on('disconnect',()=>{
         screenNameElement.innerHTML='server disconnected!!!';
     })
+    
     socket.on('updateClient',({sections, config})=>{
-        // console.log('updateClient...');
         serverState=sections;
-
         sectionsSchema = sections;
         sectionScreensElement.innerHTML=generateSectionScreens();
         updateSettings(config)
         drawControlScreen();
     })
+    
     socket.on('showToast', ({msg, color})=>{
         showToast(msg,color);
     })
-    // socket.on('changeCarouselSpeedServer',(ms)=>{
-    //     carouselMs = ms;
-    // })
-
-
-    // socket.on('updateClientSections', (sections)=> {
-    //     sectionsSchema = sections;
-    //     sectionScreensElement.innerHTML=generateSectionScreens();
-        
-    // })
 }
 
 
@@ -285,12 +269,9 @@ function generateFlagAttributes() {
 }
 
 function changeFlagParameter(cell,{type}=0) {
-    // console.dir(cell)
     if (type=='checkbox') {
         flagsSchema[cell.dataset.row][cell.dataset.param] = cell.checked;
-        // console.log(`changed ${cell.dataset.param} on index ${cell.dataset.row} in flagSchema to ${cell.checked}`)
     } else {
-        // console.log(`New value: ${cell.innerText} in ${cell.dataset.param} (index ${cell.dataset.row} in flagSchema)`)
         flagsSchema[cell.dataset.row][cell.dataset.param] = cell.innerText;
         cell.contentEditable=false;
     }
@@ -319,5 +300,4 @@ function showToast(msg,color) {
 
 setInterval(() => {
     clockElement.innerText=Date().slice(0,24);
-    // clockElement.innerText=Date().slice(16,24);
 }, 1000);
