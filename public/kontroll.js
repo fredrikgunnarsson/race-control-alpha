@@ -2,47 +2,31 @@
 // INITIALIZATIONS
 // ===============================
 
-let socket='';
+let socket;
 let flagsSchema = [{}];
+let sectionsSchema;
 let serverState=[];
-let role='control';
 
 let carouselCounter = 0;
 let carouselMs = 1700;
 let blinkTime=500;
 
 const screenNameElement = document.querySelector('#screen-name');
-const controlScreenElement = document.querySelector('#control-screen');
-const flagScreenElement = document.querySelector('#flag-screen');
-const clockElement = document.querySelector('.clock');
 const selectFlagWrapperElement = document.querySelector('.select-flag-wrapper');
-const previewScreenElement = document.querySelector('.preview-screen');
-const previewScreenNumberElement = document.querySelector('.preview-screen-number');
-const flagDisplayElement = document.querySelector('.flag-display');
-const numberDisplayElement = document.querySelector('.number-display');
-const enterNumberModalElement = document.querySelector('.enter-number-modal');
-const enterNumberInput = document.querySelector('#enter-number');
-const submitNumberBtn = document.querySelector('#submit-number');
 const sectionScreensElement = document.querySelector('.section-screens-wrapper');
 const parametersModal = document.querySelector('.parameters');
-const parameterShiftTime = document.querySelector('.settingFlaggrotation');
-const parameterblinkTime = document.querySelector('.settingBlinkhastighet');
-const parameterNumberOfScreens = document.querySelector('.settingAntalSkärmar');
-const parameterFlagAttributes = document.querySelector('.flag-attributes');
 
-(()=> {
-    return fetch('/api/flags')
+fetch('/api/flags')
     .then(res => res.json())
     .then(data => {
         flagsSchema = data.flagsModel;
         sectionsSchema = data.sections;
         selectFlagWrapperElement.innerHTML=generateSelectFlags();
-        parameterFlagAttributes.innerHTML=generateFlagAttributes();
+        document.querySelector('.flag-attributes').innerHTML=generateFlagAttributes();
         sectionScreensElement.innerHTML=generateSectionScreens();
         startPreviewCarousel();
         initiateSockets();
-    })
-})()
+    });
 
 // ===============================
 // EVENT LISTENERS
@@ -110,9 +94,9 @@ function updateSettings(config) {
         .style.animationDuration=config.blinkTime+'ms' ;
 
     carouselMs = config.shiftTime;
-    parameterShiftTime.value=config.shiftTime;
-    parameterblinkTime.value=config.blinkTime;
-    parameterNumberOfScreens.value=config.numberOfScreens;
+    document.querySelector('.settingFlaggrotation').value=config.shiftTime;
+    document.querySelector('.settingBlinkhastighet').value=config.blinkTime;
+    document.querySelector('.settingAntalSkärmar').value=config.numberOfScreens;
 }
 
 function drawControlScreen() {
@@ -165,7 +149,6 @@ function initiateSockets() {
         showToast(msg,color);
     })
 }
-
 
 // ===============================
 // HELPER FUNCTIONS
@@ -299,5 +282,5 @@ function showToast(msg,color) {
 }
 
 setInterval(() => {
-    clockElement.innerText=Date().slice(0,24);
+    document.querySelector('.clock').innerText=Date().slice(0,24);
 }, 1000);

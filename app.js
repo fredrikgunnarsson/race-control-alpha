@@ -164,7 +164,6 @@ app.get('*',(req,res) => {
 io.on('connection', socket => {
     console.log(new Date,`server connection initiated... id: ${socket.id}`)
     screens.push({id:socket.id})
-    io.emit('checkClientScreen')
     updateClient();
 
     socket.on('disconnect',()=>{
