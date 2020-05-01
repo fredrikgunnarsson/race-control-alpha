@@ -22,53 +22,11 @@ let PORT = process.env.PORT || 3009;
 const DBCONNECTION = process.env.DBCONNECTION || '';
 const SECRET = process.env.SECRET || '';
 
-//DB CONNECT
 mongoose.connect(DBCONNECTION,{useNewUrlParser:true,useUnifiedTopology: true},()=>
     console.log('connected to db')
 );
 
-// const post = new Flag({
-//     name: 'flag-vsc',
-//     needNumber: false,
-//     canBlink: true,
-//     prio: 3,
-//     canSave: false,
-//     pause: true,
-//     allScreen: false,
-//     isSignal: true
-// })
-// post.save().then(res=>console.log(res))
-
-
-
-// const post = new Config({
-//     shiftTime: 700,
-//     blinkTime: 350,
-//     numberOfScreens:12
-// })
-// post.save().then(res=>console.log(res))
-
-// const post = new User({
-//     name: 'admin',
-//     pass: 'admin',
-// })
-// post.save().then(res=>console.log(res))
-
-// User.find({}).then(res=>console.log(res))
-// Flag.deleteMany({}).then(data=>console.log(data));
-// Flag.insertMany({}, (docs)=>console.log(docs))
-
-
-// let config = {
-//     shiftTime:1700,
-//     blinkTime:500,
-//     numberOfScreens:13,
-// }
-
-let config
-let sections
-let flagsModel
-let users
+let config, sections, flagsModel, users;
 
 (async () => {
     const configData = await Config.find({});
@@ -76,15 +34,15 @@ let users
     sections = createSections(config.numberOfScreens);
 
     const flagData = await Flag.find({}).sort({prio: 1});
-    flagsModel = flagData.map(x=> ({
-        name:x.name,
-            needNumber:x.needNumber,
-            canBlink:x.canBlink,
-            prio:x.prio,
-            canSave:x.canSave,
-            pause:x.pause,
-            allScreen:x.allScreen,
-            isSignal:x.isSignal
+    flagsModel = flagData.map(flag=> ({
+        name:flag.name,
+        needNumber:flag.needNumber,
+        canBlink:flag.canBlink,
+        prio:flag.prio,
+        canSave:flag.canSave,
+        pause:flag.pause,
+        allScreen:flag.allScreen,
+        isSignal:flag.isSignal
     }));
 
     const userData = await User.find({});
@@ -322,7 +280,7 @@ io.on('connection', socket => {
     }) 
     socket.on('changeFlagAttributes',(newFlagModel)=>{
         flagsModel = newFlagModel;
-        Flag.deleteMany({}).then(data => {
+        Flag.deleteMany({}).then(() => {
             Flag.insertMany(flagsModel)
         });
     })
