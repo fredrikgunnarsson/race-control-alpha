@@ -53,7 +53,7 @@ document.addEventListener('click', (e)=>{
         socket.emit('selectFlag', {clickedFlag:flag,blink:true})
     }
     else if(e.target.dataset.btn=='section-btn') {
-        clickSection(e);
+        socket.emit('clickSection',{section:e.target.dataset.section})
     }
     else if (e.target.dataset.btn=='parameters-btn') {
         parametersModal.classList.toggle('open')
@@ -66,10 +66,6 @@ document.addEventListener('click', (e)=>{
 // ===============================
 // MAIN FUNCTIONS
 // ===============================
-
-function clickSection(e) {
-    socket.emit('clickSection',{section:e.target.dataset.section})
-}
 
 function changeCarouselSpeed(ms) {
     showToast(`Ny flaggrotation ${ms}ms`,'green')
@@ -100,27 +96,33 @@ function updateSettings(config) {
 }
 
 function drawControlScreen() {
-    let activeSection = serverState.filter(el=>el.active)[0]
-    const allSelectFlagsElements = document.querySelectorAll('.select-flag.selected');
+    drawSections();
+    drawFlagSelectors();
 
-    allSelectFlagsElements.forEach(el=>el.classList.remove('selected','blinkActive'));
+    function drawSections() {
+        serverState.forEach(el=>{
+            let sectionEl =document.querySelector(`[data-section="${el.section}"]`);
+            let opacity = (el.clients.length>0) ? '1' : '.2';
     
-    if (activeSection && activeSection.flags.length > 0) {
+            sectionEl.style.opacity = opacity;
+            (el.active)
+                ? sectionEl.classList.add('selected')   
+                : sectionEl.classList.remove('selected')
+        })
+    }
+    
+    function drawFlagSelectors() {
+        let activeSection = serverState.find(el=>el.active);
+        const allSelectFlagsElements = document.querySelectorAll('.select-flag.selected');
+
+        allSelectFlagsElements.forEach(el=>el.classList.remove('selected','blinkActive'));
+
+        if (!activeSection || activeSection.flags.length == 0) return;
         activeSection.flags.forEach(flag => {
             document.querySelector(`.select-flag.${flag.name}`)
                 .classList.add('selected', (flag.blink) ? 'blinkActive' : null);
         });
-    } 
-
-    serverState.forEach(el=>{
-        let sectionEl =document.querySelector(`[data-section="${el.section}"]`);
-        (el.clients.length>0) 
-            ? sectionEl.style.opacity='1' 
-            : sectionEl.style.opacity='.2';
-        (el.active)
-            ? sectionEl.classList.add('selected')
-            : sectionEl.classList.remove('selected');
-    })
+    }
 }
 
 function initiateSockets() {
@@ -137,10 +139,14 @@ function initiateSockets() {
         screenNameElement.innerHTML='server disconnected!!!';
     })
     
-    socket.on('updateClient',({sections, config})=>{
+    socket.on('updateClient',({sections, config, options})=>{
         serverState=sections;
         sectionsSchema = sections;
-        sectionScreensElement.innerHTML=generateSectionScreens();
+
+        if (options && options.changeNumberOfScreens) {
+            sectionScreensElement.innerHTML=generateSectionScreens();
+        } 
+        
         updateSettings(config)
         drawControlScreen();
     })

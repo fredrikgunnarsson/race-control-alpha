@@ -279,17 +279,18 @@ io.on('connection', socket => {
     })
 
     socket.on('clickSection',({section})=>{
-        let clickedSection = sections.filter(el=>el.section==section)[0]
+        let clickedSection = sections.find(el=>el.section==section)
         let activeSections = sections.filter(el=>el.active);
-        let isActive = clickedSection.active
         let isOnline = (clickedSection.clients.length > 0) ? true : false;
 
-        if (isOnline) {
-            activeSections.forEach(el => el.active=false)
-            clickedSection.active ^= true
-        } else {
+        if (!isOnline) {
             showToast(`Ingen skärm uppkopplad för sektion ${clickedSection.section}`,'orange')
+            return;
         }
+
+        activeSections.forEach(el => el.active=false)
+        // can I remove ^ ?  maybe?!
+        clickedSection.active = true;
         updateClient()
     })
 
@@ -317,8 +318,7 @@ io.on('connection', socket => {
                 sections.push({section:i++,clients:[],flags:[],active:false})
             })
         }
-        
-        updateClient();
+        updateClient({changeNumberOfScreens:true});
     }) 
     socket.on('changeFlagAttributes',(newFlagModel)=>{
         flagsModel = newFlagModel;
@@ -330,8 +330,8 @@ io.on('connection', socket => {
 
 // HELPER FUNCTIONS
 
-function updateClient() {
-    io.emit('updateClient',{sections, config})
+function updateClient(options) {
+    io.emit('updateClient',{sections, config, options})
 }
 
 function showToast(msg, color) {
