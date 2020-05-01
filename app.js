@@ -3,34 +3,30 @@ let app = express();
 let cookieParser = require('cookie-parser');
 let http = require('http').createServer(app);
 let io = require('socket.io')(http);
-
 let mongoose = require('mongoose');
-let jwt = require('jsonwebtoken');
+require('dotenv').config()
 
 let Flag = require('./model/Flag');
-let User = require('./model/User');
 let Config = require('./model/Config')
+let raceRouter = require('./router/raceRouter');
 
-let {signToken,verifyToken} = require('./auth');
-
-app.use('/', express.static('public'))
-app.use(express.json());
-app.use(cookieParser())
-
-require('dotenv').config()
 let PORT = process.env.PORT || 3009;
 const DBCONNECTION = process.env.DBCONNECTION || '';
-const SECRET = process.env.SECRET || '';
 
 mongoose.connect(DBCONNECTION,{useNewUrlParser:true,useUnifiedTopology: true},()=>
     console.log('connected to db')
 );
 
-let config, sections, flagsModel, users;
+app.use(express.json());
+app.use(cookieParser())
+app.use('/', express.static('public'))
+app.use('/', raceRouter);
+
+let config, sections, flagsModel;
 
 (async () => {
-    const configData = await Config.find({});
-    config = configData[0];
+    const configData = await Config.findOne({});
+    config = configData;
     sections = createSections(config.numberOfScreens);
 
     const flagData = await Flag.find({}).sort({prio: 1});
@@ -45,74 +41,20 @@ let config, sections, flagsModel, users;
         isSignal:flag.isSignal
     }));
 
-    const userData = await User.find({});
-    users = userData;
-
     startServer();
 })()
 
 let screens = [];
 
-// MIDDLEWARE
+//ROUTES (rest of the routes are in the router)
 
-function protectedRoute (req,res,next) {
-    let {user,pass} = verifyToken(req.cookies.race,SECRET);
-    let isUser = users.find(rec => rec.name == user);
-
-    if (isUser && isUser.pass == pass) {
-        console.log('Token verified (protectedRoute)');
-        let token = jwt.sign({pass:pass, user:user},SECRET,{expiresIn:'1d'})
-        res.cookie('race',token,{ maxAge: 1000*60*60*24*365});
-        next();
-    } else {
-        console.log('Invalid token (protectedRoute)');
-        res.status(401).send('Fel 401 - Du är ej inloggad, <a href="/login">Logga in här</a>');
-        res.end();
-    }
-}
-
-//ROUTES
-
-app.get('/', protectedRoute, (req,res)=>{
-    res.sendFile(__dirname + '/views/shortcuts.html')
-})
-app.get('/api/flags', protectedRoute ,(req,res)=>{
+app.get('/api/flags' ,(req,res)=>{
     res.json({flagsModel,sections})
 });
-app.get('/flag', protectedRoute ,(req,res) => {
-    res.sendFile(__dirname + '/views/flag.html')
-})
-app.get('/login', (req,res) => {
-    res.sendFile(__dirname + '/views/login.html')
-})
-app.get('/section/:id', protectedRoute, (req,res)=>{
-    res.sendFile(__dirname + '/views/flag.html')
-})
-app.get('/kontroll', protectedRoute, (req,res)=>{
-    res.sendFile(__dirname + '/views/kontroll.html')
-})
-app.get('/screens', protectedRoute,(req,res)=>{
+app.get('/screens',(req,res)=>{
     res.header("Content-Type",'application/json');
     res.send(JSON.stringify(sections, null, 4));
 })
-app.post('/auth', (req,res) => {
-    let {pass,user} = req.body;
-    let isUser = users.find(rec => rec.name == user);
-
-    if (!isUser) {
-        res.json({error:'Användare existerar inte'})
-        return
-    }
-    if (isUser.pass != pass) {
-        res.json({error:'Fel lösenord'})
-        return
-    }
-
-    let token = jwt.sign({pass:pass, user:user},SECRET,{expiresIn:'1d'})
-    
-    res.cookie('race',token,{ maxAge: 1000*60*60*24*365});
-    res.json({redirect:'/'})
-});
 app.get('*',(req,res) => {
     res.status(404).send('404 - den här sidan existerar inte')
 })
@@ -149,9 +91,9 @@ io.on('connection', socket => {
         let flagAttributes = flagsModel.find(flag => flag.name==clickedFlag);
         let selectedScreen = sections.find(el=>el.active);
         let allActiveScreens = sections.filter(screen => screen.clients.length > 0);
-        let flagIndex = (selectedScreen) 
-            ? selectedScreen.flags.findIndex(flag => (flag.name == clickedFlag && flag.number == number) ) 
-            : undefined;
+        let flagIndex = selectedScreen && selectedScreen.flags.findIndex(flag => {
+            (flag.name == clickedFlag && flag.number == number) 
+        })
 
         if (!selectedScreen) {
             showToast('Ingen sektion vald. Klicka på en sektion','orange');
@@ -315,7 +257,7 @@ function startServer() {
         console.log(`listening on port... ${PORT}`)
     });
 
-    setInterval(() => {
-        console.log('...');
-    }, 3000);
+    // setInterval(() => {
+    //     console.log('...');
+    // }, 3000);
 }
