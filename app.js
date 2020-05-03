@@ -104,6 +104,8 @@ io.on('connection', socket => {
             if (flagAttributes.allScreen) {
                 if (blink && !isFlagSelected().blink) {
                     allActiveScreens.forEach(screen => screen.flags=[{name:clickedFlag,blink:blink,number:number}]);
+                } else if (flagAttributes.pause) {
+                    allActiveScreens.forEach(screen => screen.flags = [...screen.pausedFlags]);
                 } else {
                     allActiveScreens.forEach(screen => screen.flags.length=0);
                 }
@@ -124,7 +126,13 @@ io.on('connection', socket => {
         }
 
         if (flagAttributes.allScreen) {
-            allActiveScreens.forEach(screen => screen.flags=[{name:clickedFlag,blink:blink,number:number}]);
+            allActiveScreens.forEach(screen => {
+                let otherFlags = screen.flags.filter(flag => {
+                    return flagsModel.find(el => el.name == flag.name).canSave
+                });
+                if(flagAttributes.pause) screen.pausedFlags=[...otherFlags];
+                screen.flags=[{name:clickedFlag,blink:blink,number:number}];
+            })
             updateClient()
             return;
         }
