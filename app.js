@@ -91,92 +91,17 @@ io.on('connection', socket => {
         let flagAttributes = flagsModel.find(flag => flag.name==clickedFlag);
         let selectedScreen = sections.find(el=>el.active);
         let allActiveScreens = sections.filter(screen => screen.clients.length > 0);
-        let flagIndex = selectedScreen && selectedScreen.flags.findIndex(flag => {
-            return (flag.name == clickedFlag && flag.number == number) 
+
+        //Return early if clicked flag is not allScreen
+        if (!flagAttributes.allScreen)  {
+            handleSelectFlag(clickedFlag,blink,number,selectedScreen);
+            return;
+        }
+
+        allActiveScreens.forEach((screen)=>{
+            handleSelectFlag(clickedFlag,blink,number,screen);
         })
 
-        if (!selectedScreen) {
-            showToast('Ingen sektion vald. Klicka på en sektion','orange');
-            return;
-        }
-
-        if (isFlagSelected()) {
-            if (flagAttributes.allScreen) {
-                if (blink && !isFlagSelected().blink) {
-                    allActiveScreens.forEach(screen => screen.flags=[{name:clickedFlag,blink:blink,number:number}]);
-                } else if (flagAttributes.pause) {
-                    allActiveScreens.forEach(screen => screen.flags = [...screen.pausedFlags]);
-                } else {
-                    allActiveScreens.forEach(screen => screen.flags.length=0);
-                }
-            } else if (blink && !isFlagSelected().blink) {
-                selectedScreen.flags[flagIndex].blink=true;
-            } else if (flagAttributes.pause) {
-                selectedScreen.flags = [...selectedScreen.pausedFlags]
-            } else {
-                removeScreenFlag()
-            }
-            updateClient()
-            return;
-        }
-
-        if (flagAttributes.prio > getLowestPrio()) {
-            showToast(`Flagga med prio ${getLowestPrio()} visas, släck den först`,'red')
-            return;
-        }
-
-        if (flagAttributes.allScreen) {
-            allActiveScreens.forEach(screen => {
-                let otherFlags = screen.flags.filter(flag => {
-                    return flagsModel.find(el => el.name == flag.name).canSave
-                });
-                if(flagAttributes.pause) screen.pausedFlags=[...otherFlags];
-                screen.flags=[{name:clickedFlag,blink:blink,number:number}];
-            })
-            updateClient()
-            return;
-        }
-        if (flagAttributes.isSignal) {
-            if(flagAttributes.pause) {
-                let otherFlags = selectedScreen.flags.filter(flag => {
-                    return flagsModel.find(el => el.name == flag.name).canSave
-                })
-                selectedScreen.pausedFlags= [...otherFlags];
-                if (otherFlags.length > 0) showToast(`Flaggor pausade`);
-            }
-            removeAllScreenFlags()
-            addFlagToScreen()
-            updateClient()
-            return;
-        }
-
-        if (selectedScreen.flags.length > 1) {
-            showToast('Max två flaggor tillåtna', 'red');
-            return;
-        }
-        
-        addFlagToScreen()
-        updateClient()
-        return;
-
-        function removeAllScreenFlags() {
-            selectedScreen.flags.length=0;
-        }
-        function addFlagToScreen() {
-            selectedScreen.flags.push({name:clickedFlag,blink:blink,number:number});
-        }
-        function removeScreenFlag() {
-            selectedScreen.flags.splice(flagIndex,1)
-        }
-        function isFlagSelected() { 
-            return selectedScreen.flags.find(flag => (flag.name == clickedFlag && flag.number==number) );
-        }
-        function getLowestPrio() {
-            let flagPrios =  selectedScreen.flags.map(flag => {
-                return flagsModel.find(el => el.name==flag.name).prio
-            })
-            return Math.min(...flagPrios);
-        }
     })
 
     socket.on('sectionUpdate',({section})=>{
@@ -258,6 +183,78 @@ function createSections(num) {
         flags:[],
         active:false}
     })
+}
+
+function handleSelectFlag(clickedFlag,blink,number,selectedScreen) {
+    let flagAttributes = flagsModel.find(flag => flag.name==clickedFlag);
+    let flagIndex = selectedScreen && selectedScreen.flags.findIndex(flag => {
+        return (flag.name == clickedFlag && flag.number == number) 
+    })
+
+    if (!selectedScreen) {
+        showToast('Ingen sektion vald. Klicka på en sektion','orange');
+        return;
+    }
+
+    if (isFlagSelected()) {
+        if (blink && !isFlagSelected().blink) {
+            selectedScreen.flags[flagIndex].blink=true;
+        } else if (flagAttributes.pause) {
+            selectedScreen.flags = [...selectedScreen.pausedFlags]
+        } else {
+            removeScreenFlag()
+        }
+        updateClient()
+        return;
+    }
+
+    if (flagAttributes.prio > getLowestPrio()) {
+        showToast(`Flagga med prio ${getLowestPrio()} visas, släck den först`,'red')
+        return;
+    }
+
+    if (flagAttributes.isSignal) {
+        if(flagAttributes.pause) {
+            let otherFlags = selectedScreen.flags.filter(flag => {
+                return flagsModel.find(el => el.name == flag.name).canSave
+            })
+            selectedScreen.pausedFlags= [...otherFlags];
+            if (otherFlags.length > 0) showToast(`Flaggor pausade`);
+        }
+        removeAllScreenFlags()
+        addFlagToScreen()
+        updateClient()
+        return;
+    }
+
+    if (selectedScreen.flags.length > 1) {
+        showToast('Max två flaggor tillåtna', 'red');
+        return;
+    }
+    
+    addFlagToScreen()
+    updateClient()
+    return;
+
+    function removeAllScreenFlags() {
+        selectedScreen.flags.length=0;
+    }
+    function addFlagToScreen() {
+        selectedScreen.flags.push({name:clickedFlag,blink:blink,number:number});
+    }
+    function removeScreenFlag() {
+        selectedScreen.flags.splice(flagIndex,1)
+    }
+    function isFlagSelected() { 
+        return selectedScreen.flags.find(flag => (flag.name == clickedFlag && flag.number==number) );
+    }
+    function getLowestPrio() {
+        let flagPrios =  selectedScreen.flags.map(flag => {
+            return flagsModel.find(el => el.name==flag.name).prio
+        })
+        return Math.min(...flagPrios);
+    }
+
 }
 
 function startServer() {
