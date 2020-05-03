@@ -92,7 +92,7 @@ io.on('connection', socket => {
         let selectedScreen = sections.find(el=>el.active);
         let allActiveScreens = sections.filter(screen => screen.clients.length > 0);
         let flagIndex = selectedScreen && selectedScreen.flags.findIndex(flag => {
-            (flag.name == clickedFlag && flag.number == number) 
+            return (flag.name == clickedFlag && flag.number == number) 
         })
 
         if (!selectedScreen) {
