@@ -274,8 +274,7 @@ function isNumberFlagActive(flag) {
     let activeScreen = sectionsSchema.find(el=>el.active);
     if (!activeScreen) return false;
     let clickedFlag = activeScreen.flags.filter(el => el.name==flag);
-    if (typeof clickedFlag != 'object' || clickedFlag.length > 1) return false;
-    console.log(clickedFlag[0].number)
+    if (clickedFlag.length != 1) return false;
     return clickedFlag[0].number;
 }
 
