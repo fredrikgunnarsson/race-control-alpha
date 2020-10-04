@@ -44,6 +44,8 @@ document.addEventListener('click', (e)=>{
         if (numEl.value > 0) {
             socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:numEl.value})
             numEl.value=null;
+        } else if (isNumberFlagActive(flag)) {
+            socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:isNumberFlagActive(flag)})
         } else {
             showToast('Inget nummer. Fyll i nummer!','red');
         }
@@ -266,6 +268,15 @@ function changeFlagParameter(cell,{type}=0) {
     }
     selectFlagWrapperElement.innerHTML=generateSelectFlags();
     socket.emit('changeFlagAttributes',flagsSchema);
+}
+
+function isNumberFlagActive(flag) {
+    let activeScreen = sectionsSchema.find(el=>el.active);
+    if (!activeScreen) return false;
+    let clickedFlag = activeScreen.flags.filter(el => el.name==flag);
+    if (typeof clickedFlag != 'object' || clickedFlag.length > 1) return false;
+    console.log(clickedFlag[0].number)
+    return clickedFlag[0].number;
 }
 
 function showToast(msg,color) {
