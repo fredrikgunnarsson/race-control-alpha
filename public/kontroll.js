@@ -40,12 +40,16 @@ document.addEventListener('click', (e)=>{
     else if (e.target.dataset.btn=='select-num-flag') {
         let flag = e.target.dataset.flag;
         let numEl = document.querySelector('.car-number-input input');
+        let numFlagNumbers = getNumFlagNumbers(flag);
 
         if (numEl.value > 0) {
             socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:numEl.value})
             numEl.value=null;
-        } else if (isNumberFlagActive(flag)) {
-            socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:isNumberFlagActive(flag)})
+        } else if (numFlagNumbers.length==1) {
+            socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:numFlagNumbers[0]})
+        } else if (numFlagNumbers.length > 1) {
+            // alert(`pick a number ${numFlagNumbers}`)
+            pickNumberToDeactivate(flag, numFlagNumbers);
         } else {
             showToast('Inget nummer. Fyll i nummer!','red');
         }
@@ -270,12 +274,31 @@ function changeFlagParameter(cell,{type}=0) {
     socket.emit('changeFlagAttributes',flagsSchema);
 }
 
-function isNumberFlagActive(flag) {
+function getNumFlagNumbers(flag) {
     let activeScreen = sectionsSchema.find(el=>el.active);
     if (!activeScreen) return false;
-    let clickedFlag = activeScreen.flags.filter(el => el.name==flag);
-    if (clickedFlag.length != 1) return false;
-    return clickedFlag[0].number;
+    let clickedFlag = activeScreen.flags
+        .filter(el => el.name==flag)
+        .map(el => el.number);
+    if (clickedFlag.length == 0) return false;
+    return clickedFlag;
+}
+
+function pickNumberToDeactivate(flag, numFlagNumbers) {
+    let newEl = document.createElement('div');
+    newEl.className = "deactivate-number-modal";
+    numFlagNumbers.forEach(num => {
+        let newNumEl = document.createElement('div');
+        newNumEl.className="deactivate-number-modal-num";
+        newNumEl.innerText=`släck nr ${num}`;
+        newNumEl.onclick = () => {
+            socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:num});
+            document.querySelector('.deactivate-number-modal').remove()
+        }
+        newEl.appendChild(newNumEl);
+    });
+    document.querySelector('body').appendChild(newEl);
+    // socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:numFlagNumbers[0]})
 }
 
 function showToast(msg,color) {

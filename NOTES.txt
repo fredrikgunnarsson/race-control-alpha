@@ -19,3 +19,5 @@
 [x] Ändra höjd o bredd på flaggorna
 [x] Bakgrundsfärg svart, med liten bana i kontrastfärg för att se att skärmen är på oc onte trasig
 [] Är det nummer på flaggor så ska det räcka att klicka på flaggan för att stänga ner den
+
+[] Om flagga inte visas på skärm, visa klocka som bakgrund
