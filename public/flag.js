@@ -58,9 +58,9 @@ socket.on('updateClient',({sections, config})=>{
 })
 
 socket.on('clickStart', ({btn, text, time})=> {
-    console.log(`clicked ${btn} text: ${text} time:${time}`);
+    // console.log(`clicked ${btn} text: ${text} time:${time}`);
+    if(section!=0) return;
     if (btn=='start') {
-        openStartModal();
         runStartSequence();
     } else if (btn=='abortStart') {
         abortStart();
@@ -69,6 +69,8 @@ socket.on('clickStart', ({btn, text, time})=> {
     } else if (btn=='startIntro') {
         openStartModal();
         runStartIntro(time,text);
+    } else if (btn=='rollingStart') {
+        runRollingStartSequence();
     }
 })
 
@@ -140,6 +142,8 @@ function runStartIntro(time=2, text='infotext') {
 
 function runStartSequence() {
     startLightTextElement.style.display='none';
+    dots.forEach(el=>el.classList.remove('blink-animation'));
+    isAbortStart=false;  
     let dotIndex=0;
     countdownLights();
 
@@ -148,23 +152,31 @@ function runStartSequence() {
             abortStart();
             return;
         }
-        if (dotIndex>4) return;
+        if (dotIndex>5) return;
     
-        if (dotIndex<4) {     
+        if (dotIndex<5) {     
             setTimeout(() => {
                 dots[dotIndex].style.background='red';
+                dots[dotIndex].style.boxShadow='0rem 7rem red';
                 dotIndex++;
                 countdownLights();
             }, 1000);
         } else {
             let delay = Math.random() * 4.8 + .2;
-            console.log(delay);
             setTimeout(() => {
-                dots.forEach(el=>el.style.background='green')
+                dots.forEach(el=>el.style.background='black')
+                dots.forEach(el=>el.style.boxShadow='0rem 7rem black');
             }, delay * 1000);
         }
     }
+}
 
+function runRollingStartSequence() {
+    startLightTextElement.style.display='none';
+    isAbortStart=false;  
+    dots.forEach(el=>el.classList.remove('blink-animation'));
+    dots.forEach(el=>el.style.background='green')
+    dots.forEach(el=>el.style.boxShadow='0rem 7rem black');
 }
 
 function closeStartModal() {
@@ -178,6 +190,7 @@ function closeStartModal() {
 
 function openStartModal() {
     dots.forEach(el=>el.style.background='black');
+    dots.forEach(el=>el.style.boxShadow='0rem 7rem black');
     flagStartLightElement.classList.add('open');
     dotIndex=0;
     isAbortStart=false;  
@@ -187,5 +200,6 @@ function abortStart() {
     startLightTextElement.style.display='none';
     isAbortStart=true;
     dots.forEach(el=>el.style.background='red');
+    dots.forEach(el=>el.style.boxShadow='0rem 7rem black');
     dots.forEach(el=>el.classList.add('blink-animation'));
 }

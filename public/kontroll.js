@@ -16,6 +16,8 @@ const selectFlagWrapperElement = document.querySelector('.select-flag-wrapper');
 const sectionScreensElement = document.querySelector('.section-screens-wrapper');
 const parametersModal = document.querySelector('.parameters');
 const startLightModal = document.querySelector('.start-light');
+const hideAfterStartElements = Array.from(document.querySelectorAll('.hide-after-start'));
+const showOnStartElements = Array.from(document.querySelectorAll('.show-on-start'));
 
 fetch('/api/flags')
     .then(res => res.json())
@@ -183,6 +185,24 @@ function initiateSockets() {
     
     socket.on('showToast', ({msg, color})=>{
         showToast(msg,color);
+    })
+
+    socket.on('clickStart', ({btn, text, time})=> {
+        // console.log(`clicked ${btn} text: ${text} time:${time}`);
+        if (btn=='start') {
+            // runStartSequence();
+        } else if (btn=='abortStart') {
+            // abortStart();
+            hideAfterStartElements.forEach(el=>el.style.opacity='1');
+            showOnStartElements.forEach(el=>el.style.opacity='.3');
+        } else if (btn=='closeStart') {
+            // closeStartModal();
+        } else if (btn=='startIntro') {
+            hideAfterStartElements.forEach(el=>el.style.opacity='.3');
+            showOnStartElements.forEach(el=>el.style.opacity='1');
+        } else if (btn=='rollingStart') {
+            // runRollingStartSequence();
+        }
     })
 }
 
