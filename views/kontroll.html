@@ -42,6 +42,19 @@
             </div>
             <div class="flag-attributes"></div>
         </div>
+        <div class="start-light">
+            <div class="close" data-btn="start-light-close-btn">CLOSE</div>
+            <h2 class="">Kontrollskärm Start</h2>
+            <span class="label">Antal minuter (0=ingen nedräkning)</span>
+            <input type="number" id="start-minutes" class="" value="0"/>
+            <span class="label">Informationstext</span>
+            <input type="text" id="start-infotext" class="" />
+            <div class="race-function-btn btn" data-btn="start-intro-btn">Start Intro</div>
+            <div class="race-function-btn btn" data-btn="start-btn">Start</div>
+            <div class="race-function-btn btn" data-btn="rolling-start-btn">Rullande start</div>
+            <div class="race-function-btn btn" data-btn="abort-start-btn">Avbryt start</div>
+            <div class="race-function-btn btn" data-btn="close-start-btn">Stäng startskärm</div>
+         </div>
         <div class="screens-wrapper">
             <div class="preview-screen-wrapper">
                 <div class="btn section-screen" data-btn="section-btn" data-section="0">
@@ -52,7 +65,7 @@
             <div class="section-screens-wrapper">
             </div>
             <div class="race-functions-wrapper">
-                <div class="btn race-function-btn">Startljus</div>
+                <div class="btn race-function-btn" data-btn="start-light-btn">Startljus</div>
                 <div class="btn race-function-btn">Övrig info</div>
                 <div class="car-number-input">
                     <span>Nummer</span>

@@ -59,6 +59,11 @@ header {
 nav {
     display:inline-block;
 }
+.label {
+    font-weight:400;
+    font-size:1rem;
+    margin-top:1rem;
+}
 .clock {
     line-height: 3rem;
 }
@@ -299,18 +304,46 @@ nav {
     right: 58px;
     pointer-events: none;
 }
-.parameters {
-    opacity:.3;
+.start-light {
+    opacity: 0;
     transform: translateX(-100%);
     position: absolute;
     height: 100%;
+    width: 100%;
+    display: flex;
+    grid-gap:.5rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 200px 100px;
+    background: #333;
+    z-index: 50;
+    transition: 250ms ease-in-out;
+}
+.start-light .close {
+    position: absolute;
+    top: 100px;
+    right: 100px;
+    cursor: pointer;
+}
+.start-light.open {
+    opacity:1;
+    transform: translateX(0%);
+}
+.parameters {
+    opacity:0;
+    transform: translateX(-100%);
+    position: absolute;
+    height: 100%;
+    width:100%;
+    overflow: scroll hidden;
     padding: 200px 100px;
     background: #333;
     z-index: 50;
     transition: 250ms ease-in-out;
 }
 .parameters.open {
-    opacity: 1;
+    opacity: .8;
     transform: translateX(0%);
 }
 .parameters .close {
@@ -429,6 +462,46 @@ svg.track {
 }
 #flag-screen .flag {
     background-size: contain;
+}
+
+.flag-start-light {
+    background-color: black;
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    z-index: 9;
+    display:none;
+    justify-content: center;
+    align-items: center;
+    grid-gap: 7vw;
+}
+.flag-start-light.open {
+    display: flex;
+}
+.start-light-text {
+    color: white;
+    position: absolute;
+    font-size: 2rem;
+    z-index:1;
+    text-align:center;
+    display:none;
+}
+.light-dot {
+    background-color:red;
+    height: 10vw;
+    width: 10vw;
+    position:relative;
+    border-radius: 100%;
+    margin-top:-10vw;
+}
+.light-dot::after {
+    content: '';
+    position: absolute;
+    top: 12vw;
+    height: 10vw;
+    background-color: inherit;
+    width: 10vw;
+    border-radius: 100%;
 }
 
 .flag-finish {
@@ -559,7 +632,7 @@ input[type=number]::-webkit-outer-spin-button {
         opacity:1;
     }
     50% {
-        opacity:.2;
+        opacity:.1;
     }
     100% {
         opacity:1;
@@ -567,10 +640,10 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 @keyframes dash {
-from {
-    stroke-dashoffset: -3900;
-}
-to {
-    stroke-dashoffset: 1;
-}
+    from {
+        stroke-dashoffset: -3900;
+    }
+    to {
+        stroke-dashoffset: 1;
+    }
 }

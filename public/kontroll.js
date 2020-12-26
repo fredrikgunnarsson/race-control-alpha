@@ -15,6 +15,7 @@ const screenNameElement = document.querySelector('#screen-name');
 const selectFlagWrapperElement = document.querySelector('.select-flag-wrapper');
 const sectionScreensElement = document.querySelector('.section-screens-wrapper');
 const parametersModal = document.querySelector('.parameters');
+const startLightModal = document.querySelector('.start-light');
 
 fetch('/api/flags')
     .then(res => res.json())
@@ -62,10 +63,33 @@ document.addEventListener('click', (e)=>{
         socket.emit('clickSection',{section:e.target.dataset.section})
     }
     else if (e.target.dataset.btn=='parameters-btn') {
-        parametersModal.classList.toggle('open')
+        parametersModal.classList.toggle('open');
     }
     else if (e.target.dataset.btn=='parameters-close-btn') {
-        parametersModal.classList.toggle('open')
+        parametersModal.classList.toggle('open');
+    }
+    else if (e.target.dataset.btn=='start-light-btn') {
+        startLightModal.classList.toggle('open');
+    }
+    else if (e.target.dataset.btn=='start-light-close-btn') {
+        startLightModal.classList.toggle('open');
+    }
+    else if (e.target.dataset.btn=='start-intro-btn') {
+        let startMinutes = document.querySelector('#start-minutes').value;
+        let infoText = document.querySelector('#start-infotext').value;
+        socket.emit('clickStart',{btn:'startIntro',text:infoText,time:startMinutes});
+    }
+    else if (e.target.dataset.btn=='start-btn') {
+        socket.emit('clickStart',{btn:'start'});
+    }
+    else if (e.target.dataset.btn=='rolling-start-btn') {
+        socket.emit('clickStart',{btn:'rollingStart'});
+    }
+    else if (e.target.dataset.btn=='abort-start-btn') {
+        socket.emit('clickStart',{btn:'abortStart'});
+    }
+    else if (e.target.dataset.btn=='close-start-btn') {
+        socket.emit('clickStart',{btn:'closeStart'});
     }
 })
 

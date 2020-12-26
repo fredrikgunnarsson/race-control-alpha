@@ -45,6 +45,15 @@ let config, sections, flagsModel;
 })()
 
 let screens = [];
+let start = {
+    startIntro:false,
+    start:false,
+    startRolling:false,
+    startAbort:false,
+    closeStart:false,
+    time:0,
+    infoText:''
+}
 
 //ROUTES (rest of the routes are in the router)
 
@@ -158,6 +167,10 @@ io.on('connection', socket => {
         Flag.deleteMany({}).then(() => {
             Flag.insertMany(flagsModel)
         });
+    })
+
+    socket.on('clickStart', ({btn,text,time})=> {
+        io.emit('clickStart', {btn:btn,text:text,time:time})
     })
 })
 
