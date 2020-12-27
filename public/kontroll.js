@@ -197,6 +197,9 @@ function initiateSockets() {
             showOnStartElements.forEach(el=>el.style.opacity='.3');
         } else if (btn=='closeStart') {
             // closeStartModal();
+            hideAfterStartElements.forEach(el=>el.style.opacity='1');
+            showOnStartElements.forEach(el=>el.style.opacity='.3');
+            startLightModal.classList.toggle('open');
         } else if (btn=='startIntro') {
             hideAfterStartElements.forEach(el=>el.style.opacity='.3');
             showOnStartElements.forEach(el=>el.style.opacity='1');

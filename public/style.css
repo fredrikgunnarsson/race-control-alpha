@@ -80,6 +80,12 @@ nav {
 .btn {
     cursor: pointer;
 }
+.btn.btn-red {
+    background-color: darkred;
+}
+.btn.btn-green {
+    background-color: darkgreen;
+}
 .car-number-input {
     color: #333;
     grid-column: span 2;
@@ -133,6 +139,14 @@ nav {
     background:white;
     color:black;
     line-height: 1;
+}
+.flag-display .flag-display-date {
+    color: white;
+    margin-top: 10vw;
+    text-align: center;
+    display: block;
+    width: 100%;
+    font-size: 2rem;
 }
 .flag-display .carNum {
     font-size: 17vw;
@@ -336,6 +350,18 @@ nav {
     opacity:1;
     transform: translateX(0%);
 }
+.start-light input {
+    font-size: 2rem;
+    font-weight: 800;
+    width: 6rem;
+    text-align: center;
+}
+.start-light input.text {
+    font-size: 1rem;
+    font-weight: 400;
+    width: 18rem;
+    text-align: left;
+}
 .parameters {
     opacity:0;
     transform: translateX(-100%);
@@ -349,7 +375,7 @@ nav {
     transition: 250ms ease-in-out;
 }
 .parameters.open {
-    opacity: .8;
+    opacity: 1;
     transform: translateX(0%);
 }
 .parameters .close {

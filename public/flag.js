@@ -96,9 +96,13 @@ function startFlagCarousel() {
     let alternatingFlag = thisSection.flags[carouselCounter % thisSection.flags.length];
     let displayDiv = document.querySelector('.flag-display');
     let carNumDiv = document.querySelector('.carNum');
+    let dateDiv = document.querySelector('.flag-display-date');
+
+    let currentDate = new Date();
 
     if(thisSection && thisSection.flags.length < 1) {
         displayDiv.className="flag-display";
+        dateDiv.innerText=`${currentDate.toLocaleString().slice(0,16)}`;
         carNumDiv.innerText = '';
     } else {
         let numLength = (alternatingFlag.hasOwnProperty('number')) ? alternatingFlag.number.length : '';
@@ -112,6 +116,7 @@ function startFlagCarousel() {
         `;
         //refactor this
         carNumDiv.innerText = (alternatingFlag.number) ? alternatingFlag.number : '' ;
+        dateDiv.innerText='';
     }
 
     carouselCounter++;
