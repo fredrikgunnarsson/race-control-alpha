@@ -102,7 +102,7 @@ function startFlagCarousel() {
 
     if(thisSection && thisSection.flags.length < 1) {
         displayDiv.className="flag-display";
-        dateDiv.innerText=`${currentDate.toLocaleString().slice(0,16)}`;
+        dateDiv.innerText=`${currentDate.toLocaleString().slice(11,16)}`;
         carNumDiv.innerText = '';
     } else {
         let numLength = (alternatingFlag.hasOwnProperty('number')) ? alternatingFlag.number.length : '';
@@ -162,7 +162,7 @@ function runStartSequence() {
         if (dotIndex<5) {     
             setTimeout(() => {
                 dots[dotIndex].style.background='red';
-                dots[dotIndex].style.boxShadow='0rem 7rem red';
+                dots[dotIndex].style.boxShadow='0rem 15vh red';
                 dotIndex++;
                 countdownLights();
             }, 1000);
@@ -170,7 +170,7 @@ function runStartSequence() {
             let delay = Math.random() * 4.8 + .2;
             setTimeout(() => {
                 dots.forEach(el=>el.style.background='black')
-                dots.forEach(el=>el.style.boxShadow='0rem 7rem black');
+                dots.forEach(el=>el.style.boxShadow='0rem 15vh black');
             }, delay * 1000);
         }
     }
@@ -181,7 +181,7 @@ function runRollingStartSequence() {
     isAbortStart=false;  
     dots.forEach(el=>el.classList.remove('blink-animation'));
     dots.forEach(el=>el.style.background='green')
-    dots.forEach(el=>el.style.boxShadow='0rem 7rem black');
+    dots.forEach(el=>el.style.boxShadow='0rem 15vh black');
 }
 
 function closeStartModal() {
@@ -195,7 +195,7 @@ function closeStartModal() {
 
 function openStartModal() {
     dots.forEach(el=>el.style.background='black');
-    dots.forEach(el=>el.style.boxShadow='0rem 7rem black');
+    dots.forEach(el=>el.style.boxShadow='0rem 15vh black');
     flagStartLightElement.classList.add('open');
     dotIndex=0;
     isAbortStart=false;  
@@ -205,6 +205,6 @@ function abortStart() {
     startLightTextElement.style.display='none';
     isAbortStart=true;
     dots.forEach(el=>el.style.background='red');
-    dots.forEach(el=>el.style.boxShadow='0rem 7rem black');
+    dots.forEach(el=>el.style.boxShadow='0rem 15vh black');
     dots.forEach(el=>el.classList.add('blink-animation'));
 }

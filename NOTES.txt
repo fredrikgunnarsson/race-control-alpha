@@ -10,7 +10,7 @@
 [x] Dynamiskt antal skärmar, lägg in i inställningar
 
 [x] Samma nummerflagga ska kunna visas två gånger, med olika nummer
-[] Om bara en flagga visas så försvinner den om man klickar, annars krävs nummer
+[x] Om bara en flagga visas så försvinner den om man klickar, annars krävs nummer
 
 [x] Alla flaggor i helformat, nummer ovanpå. eventuellt ändra så att man kan bestämma textfärg
 [x] SC 60 flaggan ska vara SC enbart
@@ -18,6 +18,21 @@
 
 [x] Ändra höjd o bredd på flaggorna
 [x] Bakgrundsfärg svart, med liten bana i kontrastfärg för att se att skärmen är på oc onte trasig
-[] Är det nummer på flaggor så ska det räcka att klicka på flaggan för att stänga ner den
+[x] Är det nummer på flaggor så ska det räcka att klicka på flaggan för att stänga ner den
 
-[] Om flagga inte visas på skärm, visa klocka som bakgrund
+[x] Om flagga inte visas på skärm, visa klocka som bakgrund
+
+[x] De röda plupparna går in i varandra i startsekvensen, utseendefråga
+[x] Start/rullande start ska inaktivera varandra
+[x] Ändra "Stäng startskärm" till "Rensa startskärm"
+[x] Rensa startskärm ska inte dölja kontrollskärm start
+[] AVVAKTA - miniatyrflagga ska visas i startsekvensen
+[x] Sorteringsordning ny option på flagginställningarna
+[x] Det ska räcka med att klicka på minuter eller text på startskärm för att den ska markera editerbar text
+
+[] Kommando för att öppna en flaggskärm i helskärm när datorn startar
+
+[x] Visa endast tid (tim+minut) på bakgrund flaggskärm (EJ datum)
+[] Ingen default flahhskärm. När val av flagga är klart skall aktiv flaggskärm avmarkeras, så man alltid måste välja flaggskärm före val av flagga (ingen default flaggskärm)
+[] Lägg till funktion för att visa flagga på alla skärmar alternativt lägg till 3 flaggor "Alla"
+[] I vissa lägen hänger sig SC flaggan (eventuellt fler flaggor) på Skärm-0 och går ej att släcka

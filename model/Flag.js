@@ -24,6 +24,9 @@ const FlagSchema = new mongoose.Schema({
     },
     isSignal: {
         type:Boolean
+    },
+    sort: {
+        type:Number
     }
 });
 

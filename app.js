@@ -29,7 +29,7 @@ let config, sections, flagsModel;
     config = configData;
     sections = createSections(config.numberOfScreens);
 
-    const flagData = await Flag.find({}).sort({prio: 1});
+    const flagData = await Flag.find({}).sort({sort: 1});
     flagsModel = flagData.map(flag=> ({
         name:flag.name,
         needNumber:flag.needNumber,
@@ -38,7 +38,8 @@ let config, sections, flagsModel;
         canSave:flag.canSave,
         pause:flag.pause,
         allScreen:flag.allScreen,
-        isSignal:flag.isSignal
+        isSignal:flag.isSignal,
+        sort:flag.sort
     }));
 
     startServer();

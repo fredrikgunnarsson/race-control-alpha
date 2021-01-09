@@ -520,12 +520,12 @@ svg.track {
 }
 .light-dot {
     background-color:red;
-    height: 10vw;
-    width: 10vw;
+    height: 10vh;
+    width: 10vh;
     position:relative;
     border-radius: 100%;
-    margin-top:-10vw;
-    box-shadow: 0px 7rem red;
+    margin-top:-10vh;
+    box-shadow: 0px 15vh red;
 }
 
 .flag-finish {

@@ -191,6 +191,7 @@ function initiateSockets() {
         // console.log(`clicked ${btn} text: ${text} time:${time}`);
         if (btn=='start') {
             // runStartSequence();
+            document.querySelector('[data-btn="rolling-start-btn"]').style.opacity='.3';
         } else if (btn=='abortStart') {
             // abortStart();
             hideAfterStartElements.forEach(el=>el.style.opacity='1');
@@ -199,12 +200,12 @@ function initiateSockets() {
             // closeStartModal();
             hideAfterStartElements.forEach(el=>el.style.opacity='1');
             showOnStartElements.forEach(el=>el.style.opacity='.3');
-            startLightModal.classList.toggle('open');
         } else if (btn=='startIntro') {
             hideAfterStartElements.forEach(el=>el.style.opacity='.3');
             showOnStartElements.forEach(el=>el.style.opacity='1');
         } else if (btn=='rollingStart') {
             // runRollingStartSequence();
+            document.querySelector('[data-btn="start-btn"]').style.opacity='.3';
         }
     })
 }
@@ -236,6 +237,7 @@ function startPreviewCarousel() {
 
 function generateSelectFlags() {
     let flagHTML='';
+    flagsSchema.sort((a,b) => { if (a.sort < b.sort) return -1 });
     flagsSchema.forEach(flag => {
         flagHTML+=`
         <div 
@@ -292,6 +294,7 @@ function generateFlagAttributes() {
         <th>Pausar flaggor</th>
         <th>Alla skärmar</th>
         <th>Är signalflagga</th>
+        <th>Sortering</th>
     </tr>
     `
     flagsSchema.forEach((flag, id) => {
