@@ -33,8 +33,8 @@
 [] Kommando för att öppna en flaggskärm i helskärm när datorn startar
 
 [x] Visa endast tid (tim+minut) på bakgrund flaggskärm (EJ datum)
-[] Ingen default flahhskärm. När val av flagga är klart skall aktiv flaggskärm avmarkeras, så man alltid måste välja flaggskärm före val av flagga (ingen default flaggskärm)
+[x] Ingen default flahhskärm. När val av flagga är klart skall aktiv flaggskärm avmarkeras, så man alltid måste välja flaggskärm före val av flagga (ingen default flaggskärm)
 [] Lägg till funktion för att visa flagga på alla skärmar alternativt lägg till 3 flaggor "Alla"
-[] I vissa lägen hänger sig SC flaggan (eventuellt fler flaggor) på Skärm-0 och går ej att släcka
+[?] I vissa lägen hänger sig SC flaggan (eventuellt fler flaggor) på Skärm-0 och går ej att släcka
 
 [] Sortering av flaggorna lite buggig

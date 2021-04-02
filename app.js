@@ -105,11 +105,15 @@ io.on('connection', socket => {
         //Return early if clicked flag is not allScreen
         if (!flagAttributes.allScreen)  {
             handleSelectFlag(clickedFlag,blink,number,selectedScreen);
+            sections.forEach(el => el.active=false);
+            updateClient()
             return;
         }
 
         allActiveScreens.forEach((screen)=>{
             handleSelectFlag(clickedFlag,blink,number,screen);
+            sections.forEach(el => el.active=false);
+            updateClient()
         })
 
     })
