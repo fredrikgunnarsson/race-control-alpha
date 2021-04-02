@@ -26,9 +26,9 @@
 [x] Start/rullande start ska inaktivera varandra
 [x] Ändra "Stäng startskärm" till "Rensa startskärm"
 [x] Rensa startskärm ska inte dölja kontrollskärm start
-[] AVVAKTA - miniatyrflagga ska visas i startsekvensen
 [x] Sorteringsordning ny option på flagginställningarna
 [x] Det ska räcka med att klicka på minuter eller text på startskärm för att den ska markera editerbar text
+[] AVVAKTA - miniatyrflagga ska visas i startsekvensen
 
 [] Kommando för att öppna en flaggskärm i helskärm när datorn startar
 
@@ -36,3 +36,5 @@
 [] Ingen default flahhskärm. När val av flagga är klart skall aktiv flaggskärm avmarkeras, så man alltid måste välja flaggskärm före val av flagga (ingen default flaggskärm)
 [] Lägg till funktion för att visa flagga på alla skärmar alternativt lägg till 3 flaggor "Alla"
 [] I vissa lägen hänger sig SC flaggan (eventuellt fler flaggor) på Skärm-0 och går ej att släcka
+
+[] Sortering av flaggorna lite buggig

@@ -213,7 +213,7 @@ function handleSelectFlag(clickedFlag,blink,number,selectedScreen) {
     if (isFlagSelected()) {
         if (blink && !isFlagSelected().blink) {
             selectedScreen.flags[flagIndex].blink=true;
-        } else if (flagAttributes.pause) {
+        } else if (flagAttributes.pause && selectedScreen.pausedFlags) {
             selectedScreen.flags = [...selectedScreen.pausedFlags]
         } else {
             removeScreenFlag()
