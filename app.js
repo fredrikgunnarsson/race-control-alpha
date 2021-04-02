@@ -102,20 +102,16 @@ io.on('connection', socket => {
         let selectedScreen = sections.find(el=>el.active);
         let allActiveScreens = sections.filter(screen => screen.clients.length > 0);
 
-        //Return early if clicked flag is not allScreen
         if (!flagAttributes.allScreen)  {
             handleSelectFlag(clickedFlag,blink,number,selectedScreen);
-            sections.forEach(el => el.active=false);
-            updateClient()
-            return;
+        } else {
+            allActiveScreens.forEach((screen)=>{
+                handleSelectFlag(clickedFlag,blink,number,screen);
+            })
         }
 
-        allActiveScreens.forEach((screen)=>{
-            handleSelectFlag(clickedFlag,blink,number,screen);
-            sections.forEach(el => el.active=false);
-            updateClient()
-        })
-
+        sections.forEach(el => el.active=false);
+        updateClient()
     })
 
     socket.on('sectionUpdate',({section})=>{
