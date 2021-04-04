@@ -102,7 +102,8 @@ function startFlagCarousel() {
 
     if(thisSection && thisSection.flags.length < 1) {
         displayDiv.className="flag-display";
-        dateDiv.innerText=`${currentDate.toLocaleString().slice(11,16)}`;
+        // dateDiv.innerText=`${currentDate.toLocaleString().slice(11,16)}`;
+        dateDiv.innerText=`${Date().slice(16,21)}`;
         carNumDiv.innerText = '';
     } else {
         let numLength = (alternatingFlag.hasOwnProperty('number')) ? alternatingFlag.number.length : '';

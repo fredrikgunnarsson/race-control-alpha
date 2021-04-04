@@ -44,11 +44,15 @@
         </div>
         <div class="start-light">
             <div class="close" data-btn="start-light-close-btn">CLOSE</div>
-            <h2 class="">Kontrollskärm Start</h2>
-            <span class="label hide-after-start">Antal minuter (0=ingen nedräkning)</span>
-            <input type="number" id="start-minutes" class="hide-after-start" value="0" onClick="this.select();"/>
-            <span class="label hide-after-start">Informationstext</span>
-            <input type="text" id="start-infotext" class="text hide-after-start" onClick="this.select();"/>
+            <h2 class="">Startljus</h2>
+            <div class="group">
+                <span class="label hide-after-start">Antal minuter (0=ingen nedräkning)</span>
+                <input type="number" id="start-minutes" class="hide-after-start" value="0" onClick="this.select();"/>
+            </div>
+            <div class="group">
+                <span class="label hide-after-start">Informationstext</span>
+                <input type="text" id="start-infotext" class="text hide-after-start" onClick="this.select();"/>
+            </div>
             <div class="race-function-btn btn hide-after-start" data-btn="start-intro-btn">Start Intro</div>
             <div class="race-function-btn btn btn-green show-on-start" data-btn="start-btn">Start</div>
             <div class="race-function-btn btn btn-green show-on-start" data-btn="rolling-start-btn">Rullande start</div>
@@ -67,7 +71,7 @@
             </div>
             <div class="race-functions-wrapper">
                 <div class="btn race-function-btn" data-btn="start-light-btn">Startljus</div>
-                <div class="btn race-function-btn">Övrig info</div>
+                <div class="btn race-function-btn" data-btn="main-screen-btn">Huvudskärm</div>
                 <div class="car-number-input">
                     <span>Nummer</span>
                     <input type="number" max="99" min="1"/>

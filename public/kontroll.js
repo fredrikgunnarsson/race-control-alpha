@@ -17,6 +17,7 @@ const sectionScreensElement = document.querySelector('.section-screens-wrapper')
 const parametersModal = document.querySelector('.parameters');
 const startLightModal = document.querySelector('.start-light');
 const allScreensBtn = document.querySelector('div[data-btn="all-screens-btn"]');
+const mainScreenBtn = document.querySelector('div[data-btn="main-screen-btn"]');
 const hideAfterStartElements = Array.from(document.querySelectorAll('.hide-after-start'));
 const showOnStartElements = Array.from(document.querySelectorAll('.show-on-start'));
 
@@ -39,7 +40,7 @@ fetch('/api/flags')
 document.addEventListener('click', (e)=>{
     if(e.target.dataset.btn=='select-flag') {
         let flag = e.target.dataset.flag;
-        socket.emit('selectFlag', {clickedFlag:flag,blink:false,allScreens:isAllScreensSelected()} )
+        socket.emit('selectFlag', {clickedFlag:flag,blink:false,allScreens:isAllScreensSelected(),mainScreen:isMainScreenSelected()} )
     }
     else if (e.target.dataset.btn=='select-num-flag') {
         let flag = e.target.dataset.flag;
@@ -47,10 +48,10 @@ document.addEventListener('click', (e)=>{
         let numFlagNumbers = getNumFlagNumbers(flag);
 
         if (numEl.value > 0) {
-            socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:numEl.value,allScreens:isAllScreensSelected()})
+            socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:numEl.value,allScreens:isAllScreensSelected(),mainScreen:isMainScreenSelected()})
             numEl.value=null;
         } else if (numFlagNumbers.length==1) {
-            socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:numFlagNumbers[0],allScreens:isAllScreensSelected()})
+            socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:numFlagNumbers[0],allScreens:isAllScreensSelected(),mainScreen:isMainScreenSelected()})
         } else if (numFlagNumbers.length > 1) {
             // alert(`pick a number ${numFlagNumbers}`)
             pickNumberToDeactivate(flag, numFlagNumbers);
@@ -60,7 +61,7 @@ document.addEventListener('click', (e)=>{
     }
     else if (e.target.dataset.btn=='blink-btn') {
         let flag = e.target.parentElement.dataset.flag;
-        socket.emit('selectFlag', {clickedFlag:flag,blink:true,allScreens:isAllScreensSelected()})
+        socket.emit('selectFlag', {clickedFlag:flag,blink:true,allScreens:isAllScreensSelected(),mainScreen:isMainScreenSelected()})
     }
     else if(e.target.dataset.btn=='section-btn') {
         socket.emit('clickSection',{section:e.target.dataset.section})
@@ -73,6 +74,9 @@ document.addEventListener('click', (e)=>{
     }
     else if (e.target.dataset.btn=='all-screens-btn') {
         allScreensBtn.classList.toggle('btn-green')
+    }
+    else if (e.target.dataset.btn=='main-screen-btn') {
+        mainScreenBtn.classList.toggle('btn-green')
     }
     else if (e.target.dataset.btn=='start-light-btn') {
         startLightModal.classList.toggle('open');
@@ -346,7 +350,7 @@ function pickNumberToDeactivate(flag, numFlagNumbers) {
         newNumEl.className="deactivate-number-modal-num";
         newNumEl.innerText=`släck nr ${num}`;
         newNumEl.onclick = () => {
-            socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:num});
+            socket.emit('selectFlag', {clickedFlag:flag,blink:false,number:num,allScreens:isAllScreensSelected(),mainScreen:isMainScreenSelected()});
             document.querySelector('.deactivate-number-modal').remove()
         }
         newEl.appendChild(newNumEl);
@@ -377,6 +381,12 @@ function showToast(msg,color) {
 function isAllScreensSelected() {
     let isTrue = allScreensBtn.className.includes('green');
     if (isTrue) allScreensBtn.classList.toggle('btn-green');
+    return isTrue
+}
+
+function isMainScreenSelected() {
+    let isTrue = mainScreenBtn.className.includes('green');
+    // if (isTrue) mainScreenBtn.classList.toggle('btn-green');
     return isTrue
 }
 

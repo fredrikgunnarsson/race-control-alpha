@@ -97,10 +97,12 @@ io.on('connection', socket => {
         updateClient()
     })
 
-    socket.on('selectFlag',({clickedFlag,blink,number, allScreens})=>{
+    socket.on('selectFlag',({clickedFlag,blink,number, allScreens, mainScreen})=>{
         let flagAttributes = flagsModel.find(flag => flag.name==clickedFlag);
         let selectedScreen = sections.find(el=>el.active);
         let allActiveScreens = sections.filter(screen => screen.clients.length > 0);
+
+        if (mainScreen) selectedScreen = sections.find(el=>el.section==0);
 
         if (!flagAttributes.allScreen && !allScreens)  {
             handleSelectFlag(clickedFlag,blink,number,selectedScreen);
