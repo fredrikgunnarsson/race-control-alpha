@@ -334,6 +334,7 @@ function changeFlagParameter(cell,{type}=0) {
 
 function getNumFlagNumbers(flag) {
     let activeScreen = sectionsSchema.find(el=>el.active);
+    if (isMainScreenSelected()) activeScreen = sectionsSchema.find(el=>el.section==0)
     if (!activeScreen) return false;
     let clickedFlag = activeScreen.flags
         .filter(el => el.name==flag)
