@@ -360,6 +360,8 @@ function changeFlagParameter(cell, { type } = 0) {
     cell.contentEditable = false;
   }
   selectFlagWrapperElement.innerHTML = generateSelectFlags();
+  document.querySelector(".flag-attributes").innerHTML =
+    generateFlagAttributes();
   socket.emit("changeFlagAttributes", flagsSchema);
 }
 
