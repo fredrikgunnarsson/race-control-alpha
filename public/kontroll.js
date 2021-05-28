@@ -356,7 +356,7 @@ function changeFlagParameter(cell, { type } = 0) {
   if (type == "checkbox") {
     flagsSchema[cell.dataset.row][cell.dataset.param] = cell.checked;
   } else {
-    flagsSchema[cell.dataset.row][cell.dataset.param] = cell.innerText;
+    flagsSchema[cell.dataset.row][cell.dataset.param] = Number(cell.innerText);
     cell.contentEditable = false;
   }
   selectFlagWrapperElement.innerHTML = generateSelectFlags();
