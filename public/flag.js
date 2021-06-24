@@ -166,8 +166,8 @@ function runStartSequence() {
 
     if (dotIndex < 5) {
       setTimeout(() => {
-        dots[dotIndex].style.background = "red";
-        dots[dotIndex].style.boxShadow = "0rem 19vw red";
+        dots[dotIndex].style.background = "#f5012e";
+        dots[dotIndex].style.boxShadow = "0rem 19vw #f5012e";
         dotIndex++;
         countdownLights();
       }, 1000);
@@ -185,7 +185,7 @@ function runRollingStartSequence() {
   startLightTextElement.style.display = "none";
   isAbortStart = false;
   dots.forEach((el) => el.classList.remove("blink-animation"));
-  dots.forEach((el) => (el.style.background = "green"));
+  dots.forEach((el) => (el.style.background = "#00cc00"));
   dots.forEach((el) => (el.style.boxShadow = "0rem 19vw black"));
 }
 
@@ -209,7 +209,7 @@ function openStartModal() {
 function abortStart() {
   startLightTextElement.style.display = "none";
   isAbortStart = true;
-  dots.forEach((el) => (el.style.background = "red"));
+  dots.forEach((el) => (el.style.background = "#f5012e"));
   dots.forEach((el) => (el.style.boxShadow = "0rem 19vw black"));
   dots.forEach((el) => el.classList.add("blink-animation"));
 }

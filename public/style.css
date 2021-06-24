@@ -521,19 +521,19 @@ svg.track {
 .start-light-text {
   color: white;
   position: absolute;
-  font-size: 6vw;
+  font-size: 7vw;
   z-index: 1;
   text-align: center;
   display: none;
 }
 .light-dot {
-  background-color: red;
+  background-color: #f5012e;
   height: 15vw;
   width: 15vw;
   position: relative;
   border-radius: 100%;
   margin-top: -10vw;
-  box-shadow: 0px 19vw red;
+  box-shadow: 0px 19vw #f5012e;
 }
 
 .flag-finish {
