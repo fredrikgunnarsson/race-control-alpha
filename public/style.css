@@ -521,7 +521,7 @@ svg.track {
 .start-light-text {
   color: white;
   position: absolute;
-  font-size: 7vw;
+  font-size: 10vw;
   z-index: 1;
   text-align: center;
   display: none;
