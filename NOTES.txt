@@ -38,3 +38,11 @@
 [?] I vissa lägen hänger sig SC flaggan (eventuellt fler flaggor) på Skärm-0 och går ej att släcka
 
 [] Sortering av flaggorna lite buggig
+
+[x] När man kör stillastående start: Sekvensen ska börja med "5 sekunder" som lyser i två sekunder - och efer 5 sekunder startar sekvensen
+[x] Man ska kunna lägga in en tid upp till 8 timmar som der räknas ner ifrån på skärmen med texten "Tid kvar". 
+   Nedräkningen startar automatiskt när ljusen slocknar vid stående start, eller när grönt tänds vid rullande start. 
+   När tiden är ute så står det 0:00:00. 
+   Tiden ska kunna pausas samt att alla flaggor har visningsprioritet
+[x] En manuell nedräkning som visar "Varv kvar" där man anger totala antalet varv och som man sedan räknar ner med en knapp ett steg i taget till 0.
+   Flaggor ska ha visningsprioritet

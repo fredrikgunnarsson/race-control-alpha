@@ -101,10 +101,11 @@ nav {
   display: grid;
   position: relative;
   grid-template-areas:
-    "preview sections"
-    "functions sections";
+    'preview sections'
+    'functions sections'
+    'flags flags';
   grid-template-columns: 400px 1fr;
-  grid-template-rows: 2fr 1fr;
+  /* grid-template-rows: 2fr 1fr; */
   margin: auto;
   padding: 80px 10px 30px 10px;
   gap: 30px 60px;
@@ -117,7 +118,7 @@ nav {
 .section-screens-wrapper {
   grid-area: sections;
   display: grid;
-  grid-template-columns: repeat(auto-fill, 174px);
+  grid-template-columns: repeat(auto-fill, 175px);
   justify-content: space-around;
   grid-auto-rows: 130px;
   gap: 25px 25px;
@@ -143,11 +144,20 @@ nav {
 }
 .flag-display .flag-display-date {
   color: white;
-  margin-top: 10vw;
+  margin-top: 15vw;
   text-align: center;
   display: block;
   width: 100%;
   font-size: 17vw;
+}
+.flag-display .flag-display-title {
+  color: white;
+  margin-top: 7vw;
+  text-align: center;
+  display: block;
+  width: 100%;
+  font-size: 8vw;
+  position: absolute;
 }
 .flag-display .carNum {
   font-size: 17vw;
@@ -174,7 +184,7 @@ nav {
   z-index: 9;
 }
 .section-screen.flag:after {
-  content: "";
+  content: '';
   position: absolute;
   width: 100%;
   height: 100%;
@@ -183,7 +193,7 @@ nav {
   grid-area: functions;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 30px 30px;
+  gap: 25px 25px;
   align-content: flex-end;
 }
 .race-function-btn {
@@ -197,15 +207,52 @@ nav {
   padding: 0.8rem;
   font-weight: 700;
 }
-.select-flag-wrapper {
+.groupIdleSelection {
+  grid-column: span 2;
   display: grid;
-  grid-template-columns: repeat(auto-fit, 177px);
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 5px;
+}
+.groupIdleSelection input {
+  display: none;
+}
+.groupIdleSelection label.race-function-btn.btn {
+  font-size: 1rem;
+}
+.groupIdleSelection input:checked + label {
+  background: darkgreen;
+  color: white;
+}
+.groupIdleSelection div {
+  font-size: 1rem;
+  display: none;
+  grid-column: span 3;
+}
+.groupIdleSelection div span {
+  font-size: 0.8rem;
+}
+.groupIdleSelection div span:active {
+  background: darkgray;
+}
+.groupIdleSelection
+  input[type='radio']#lapsLeft:checked
+  ~ div.decreaseLapsLeft {
+  display: flex;
+}
+.groupIdleSelection input[type='radio']#timeLeft:checked ~ div.pauseTimeLeft {
+  display: flex;
+}
+
+.select-flag-wrapper {
+  grid-area: flags;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 175px);
   grid-auto-rows: 134px;
   margin: 0 auto;
   justify-content: space-around;
-  gap: 30px 30px;
-  padding: 10px 10px;
-  max-width: 1260px;
+  gap: 25px 25px;
+  width: 100%;
+  margin-top: 50px;
 }
 .select-flag {
   position: relative;
@@ -258,7 +305,7 @@ nav {
   animation-iteration-count: infinite;
 }
 .need-number:after {
-  content: "KRÄVER NUMMER";
+  content: 'KRÄVER NUMMER';
   background-color: black;
   padding: 10px;
   position: absolute;
@@ -270,7 +317,7 @@ nav {
   pointer-events: none;
 }
 .all-screen:after {
-  content: "";
+  content: '';
   background-image: url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg' height='512pt' viewBox='0 0 512 512' width='512pt'%3E%3Cpath d='m458.667969 0h-405.335938c-29.394531 0-53.332031 23.914062-53.332031 53.332031v405.335938c0 29.417969 23.9375 53.332031 53.332031 53.332031h405.335938c29.394531 0 53.332031-23.914062 53.332031-53.332031v-405.335938c0-29.417969-23.9375-53.332031-53.332031-53.332031zm10.664062 53.332031v181.335938h-192v-192h181.335938c5.886719 0 10.664062 4.796875 10.664062 10.664062zm-416-10.664062h181.335938v192h-192v-181.335938c0-5.867187 4.777343-10.664062 10.664062-10.664062zm-10.664062 416v-181.335938h192v192h-181.335938c-5.886719 0-10.664062-4.796875-10.664062-10.664062zm416 10.664062h-181.335938v-192h192v181.335938c0 5.867187-4.777343 10.664062-10.664062 10.664062zm0 0'/%3E%3C/svg%3E");
   background-size: contain;
   padding: 7px;
@@ -280,7 +327,7 @@ nav {
   pointer-events: none;
 }
 .pause:after {
-  content: "";
+  content: '';
   background-image: url("data:image/svg+xml,%3Csvg id='Capa_1' enable-background='new 0 0 565.648 565.648' height='512' viewBox='0 0 565.648 565.648' width='512' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m282.824 0c-155.947 0-282.824 126.877-282.824 282.824s126.877 282.824 282.824 282.824 282.824-126.877 282.824-282.824-126.877-282.824-282.824-282.824zm-35.353 388.883h-70.706v-212.118h70.706zm141.412 0h-70.706v-212.118h70.706z'/%3E%3C/svg%3E");
   background-size: contain;
   padding: 7px;
@@ -290,7 +337,7 @@ nav {
   pointer-events: none;
 }
 .signal:after {
-  content: "";
+  content: '';
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' id='Capa_1' x='0px' y='0px' viewBox='0 0 512 512' style='enable-background:new 0 0 512 512;' xml:space='preserve'%3E%3Cg%3E%3Cg%3E%3Cpath d='M501.609,384.603L320.543,51.265c-13.666-23.006-37.802-36.746-64.562-36.746c-26.76,0-50.896,13.74-64.562,36.746 c-0.103,0.176-0.19,0.352-0.293,0.528L10.662,384.076c-13.959,23.491-14.223,51.702-0.719,75.457 c13.535,23.769,37.919,37.948,65.266,37.948h360.544c27.347,0,52.733-14.179,66.267-37.948 C515.524,435.779,515.261,407.566,501.609,384.603z M225.951,167.148c0-16.586,13.445-30.03,30.03-30.03 c16.586,0,30.03,13.445,30.03,30.03v120.121c0,16.584-13.445,30.03-30.03,30.03s-30.03-13.447-30.03-30.03V167.148z M255.981,437.421c-24.839,0-45.046-20.206-45.046-45.046c0-24.839,20.206-45.045,45.046-45.045 c24.839,0,45.045,20.206,45.045,45.045C301.027,417.214,280.821,437.421,255.981,437.421z'/%3E%3C/g%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3C/svg%3E");
   background-size: contain;
   padding: 7px;
@@ -311,7 +358,7 @@ nav {
   pointer-events: none;
 }
 .save:after {
-  content: "";
+  content: '';
   background-image: url("data:image/svg+xml,%0A%3Csvg height='512pt' viewBox='0 0 512 512' width='512pt' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m486.996094 64.382812-39.378906-39.378906c-16-16.023437-37.695313-25.003906-60.332032-25.003906h-328.617187c-32.40625 0-58.667969 26.261719-58.667969 58.667969v394.664062c0 32.40625 26.261719 58.667969 58.667969 58.667969h394.664062c32.40625 0 58.667969-26.261719 58.667969-58.667969v-328.617187c0-22.636719-8.980469-44.332032-25.003906-60.332032zm-401.664063 68.949219v-53.332031c0-8.832031 7.167969-16 16-16h224c8.832031 0 16 7.167969 16 16v53.332031c0 8.832031-7.167969 16-16 16h-224c-8.832031 0-16-7.167969-16-16zm170.667969 293.335938c-53.011719 0-96-42.988281-96-96 0-53.015625 42.988281-96 96-96s96 42.984375 96 96c0 53.011719-42.988281 96-96 96zm0 0'/%3E%3C/svg%3E");
   background-size: contain;
   padding: 7px;
@@ -352,6 +399,9 @@ nav {
   opacity: 1;
   transform: translateX(0%);
 }
+.start-light .label {
+  margin-top: 0px;
+}
 .start-light input {
   font-size: 1.5rem;
   font-weight: 800;
@@ -370,13 +420,17 @@ nav {
   align-items: center;
   gap: 0.4rem;
 }
+.start-light .group-start {
+  display: flex;
+  gap: 1rem;
+}
 .parameters {
   opacity: 0;
   transform: translateX(-100%);
   position: absolute;
   height: 100%;
   width: 100%;
-  overflow: scroll hidden;
+  overflow: scroll;
   padding: 200px 100px;
   background: #333;
   z-index: 50;
@@ -423,7 +477,7 @@ td {
   padding: 7px;
   border: 1px solid #777;
 }
-td[contenteditable="true"] {
+td[contenteditable='true'] {
   background: white;
   color: #333;
 }
@@ -590,8 +644,8 @@ svg.track {
   background-image: url("data:image/svg+xml,%3Csvg width='1924' height='1024' viewBox='0 0 1924 1024' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1924' height='1024' fill='white'/%3E%3Cpath d='M0 0H1924V1024H0V0Z' fill='%23FFFF00'/%3E%3Crect x='53' y='59' width='1818' height='907' rx='83' fill='black'/%3E%3Cpath d='M387.677 584.204L456.964 354.297H527.091L420.641 660H354.923L248.893 354.297H318.81L387.677 584.204ZM714.586 579.795C714.586 567.897 710.387 558.799 701.988 552.5C693.59 546.061 678.473 539.342 656.637 532.344C634.801 525.205 617.514 518.206 604.776 511.348C570.063 492.591 552.706 467.326 552.706 435.552C552.706 419.035 557.325 404.338 566.563 391.46C575.942 378.442 589.309 368.294 606.666 361.016C624.163 353.737 643.759 350.098 665.455 350.098C687.291 350.098 706.747 354.087 723.824 362.065C740.901 369.904 754.129 381.032 763.507 395.449C773.025 409.867 777.784 426.243 777.784 444.58H714.796C714.796 430.583 710.387 419.735 701.568 412.036C692.75 404.198 680.362 400.278 664.405 400.278C649.008 400.278 637.04 403.568 628.502 410.146C619.964 416.585 615.694 425.124 615.694 435.762C615.694 445.7 620.663 454.028 630.602 460.747C640.68 467.466 655.447 473.765 674.903 479.644C710.737 490.422 736.842 503.789 753.219 519.746C769.596 535.703 777.784 555.579 777.784 579.375C777.784 605.83 767.776 626.616 747.76 641.733C727.743 656.711 700.799 664.199 666.925 664.199C643.409 664.199 621.993 659.93 602.677 651.392C583.36 642.713 568.593 630.885 558.375 615.908C548.297 600.931 543.258 583.574 543.258 563.838H606.456C606.456 597.572 626.612 614.438 666.925 614.438C681.902 614.438 693.59 611.429 701.988 605.41C710.387 599.251 714.586 590.713 714.586 579.795ZM1060.6 558.169C1058.22 591.063 1046.04 616.958 1024.07 635.854C1002.23 654.751 973.398 664.199 937.564 664.199C898.372 664.199 867.507 651.042 844.972 624.727C822.576 598.271 811.378 562.018 811.378 515.967V497.28C811.378 467.886 816.557 441.991 826.915 419.595C837.273 397.199 852.04 380.052 871.217 368.154C890.533 356.117 912.929 350.098 938.404 350.098C973.678 350.098 1002.09 359.546 1023.65 378.442C1045.2 397.339 1057.66 423.864 1061.02 458.018H998.033C996.493 438.281 990.965 424.004 981.446 415.186C972.068 406.227 957.721 401.748 938.404 401.748C917.408 401.748 901.661 409.307 891.163 424.424C880.805 439.401 875.486 462.707 875.206 494.341V517.437C875.206 550.47 880.175 574.616 890.113 589.873C900.191 605.13 916.008 612.759 937.564 612.759C957.021 612.759 971.508 608.35 981.026 599.531C990.685 590.573 996.214 576.785 997.613 558.169H1060.6ZM1367.14 351.147V401.118H1361.27C1333.83 401.538 1311.71 408.677 1294.92 422.534C1278.26 436.392 1268.25 455.638 1264.89 480.273C1281.13 463.757 1301.64 455.498 1326.41 455.498C1353.01 455.498 1374.14 465.016 1389.82 484.053C1405.5 503.089 1413.34 528.145 1413.34 559.219C1413.34 579.095 1409 597.082 1400.32 613.179C1391.78 629.276 1379.6 641.803 1363.79 650.762C1348.11 659.72 1330.33 664.199 1310.46 664.199C1278.26 664.199 1252.23 653.001 1232.35 630.605C1212.61 608.21 1202.75 578.325 1202.75 540.952V519.116C1202.75 485.942 1208.97 456.688 1221.43 431.353C1234.03 405.877 1252.02 386.211 1275.39 372.354C1298.91 358.356 1326.13 351.287 1357.07 351.147H1367.14ZM1307.94 504.209C1298.14 504.209 1289.25 506.799 1281.27 511.978C1273.29 517.017 1267.41 523.735 1263.63 532.134V550.61C1263.63 570.907 1267.62 586.794 1275.6 598.271C1283.58 609.609 1294.78 615.278 1309.2 615.278C1322.21 615.278 1332.71 610.169 1340.69 599.951C1348.81 589.593 1352.87 576.226 1352.87 559.849C1352.87 543.192 1348.81 529.754 1340.69 519.536C1332.57 509.318 1321.65 504.209 1307.94 504.209ZM1655.21 533.604C1655.21 575.876 1646.46 608.21 1628.97 630.605C1611.47 653.001 1585.85 664.199 1552.12 664.199C1518.81 664.199 1493.33 653.211 1475.69 631.235C1458.06 609.259 1449.03 577.765 1448.61 536.753V480.483C1448.61 437.791 1457.43 405.387 1475.06 383.271C1492.84 361.156 1518.39 350.098 1551.7 350.098C1585.01 350.098 1610.49 361.086 1628.13 383.062C1645.76 404.897 1654.79 436.322 1655.21 477.334V533.604ZM1594.53 471.875C1594.53 446.54 1591.03 428.133 1584.03 416.655C1577.18 405.037 1566.4 399.229 1551.7 399.229C1537.42 399.229 1526.85 404.757 1520 415.815C1513.28 426.733 1509.71 443.88 1509.29 467.256V541.582C1509.29 566.497 1512.65 585.044 1519.37 597.222C1526.22 609.259 1537.14 615.278 1552.12 615.278C1566.96 615.278 1577.67 609.469 1584.24 597.852C1590.82 586.234 1594.25 568.457 1594.53 544.521V471.875Z' fill='white'/%3E%3C/svg%3E%0A");
 }
 
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -599,9 +653,10 @@ input[type="number"]::-webkit-outer-spin-button {
 @media (max-width: 1052px) {
   .screens-wrapper {
     grid-template-areas:
-      "preview"
-      "functions"
-      "sections";
+      'preview'
+      'functions'
+      'sections'
+      'flags';
     grid-template-columns: auto;
   }
   .preview-screen-wrapper {

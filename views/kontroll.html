@@ -1,91 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Kontrollskärm</title>
-    <link rel="stylesheet" href="../style.css">
-    
+    <link rel="stylesheet" href="../style.css" />
+
     <script src="../socket.io/socket.io.js"></script>
-</head>
-<style>
+  </head>
+  <style></style>
 
-</style>
-
-<body>
+  <body>
     <div id="screen-name"></div>
-    <div id="control-screen">        
-        <header>
-            <svg class="track" width="50" viewBox="0 0 1083 931" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path class="path-track" d="M513.869 593.712C482.269 598.912 380.703 644.212 333.869 666.212C268.703 695.545 126.069 759.212 76.8694 779.212C27.6694 799.212 20.0361 843.878 22.3694 863.712C24.2028 869.545 29.5694 884.512 36.3694 897.712C43.1694 910.912 60.8694 910.212 68.8694 908.212C138.703 883.712 284.669 832.312 309.869 822.712C341.369 810.712 345.869 809.712 370.869 772.712C401.369 714.212 477.369 711.712 500.869 732.712C519.669 749.512 540.703 744.712 548.869 740.212C701.203 685.545 1010.57 574.012 1029.37 565.212C1054.37 555.212 1066.37 524.212 1058.87 494.712C1052.87 471.112 1030.37 455.212 1019.87 450.212C1002.87 448.878 968.869 442.712 968.869 428.712C971.669 387.912 953.369 361.045 943.869 352.712C877.369 279.545 735.169 125.212 698.369 93.2117C661.569 61.2117 614.369 42.8783 595.369 37.7117L536.869 24.7117C498.869 14.7117 469.369 34.7117 457.869 46.7117C446.369 58.7117 252.869 311.712 227.369 346.212C192.61 395.524 205.179 466.943 241.369 497.212C273.105 523.755 325.546 512.785 345.869 506.712C389.369 493.712 560.869 428.712 560.869 428.712C686.369 389.712 678.869 523.212 607.369 550.212C582.671 559.538 553.369 587.212 513.869 593.712Z" stroke="white" stroke-width="43"/>
-            </svg>  
-            
-            <span class="clock">Getting time...</span>
-            <nav>
-                <div class="btn" data-btn="parameters-btn">
-                    <svg style="pointer-events:none;" height="30" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class=""><path fill="white" d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z" class=""></path></svg>
-                </div>
-            </nav>
-            
-        </header>
-        <div class="parameters">
-            <div class="close" data-btn="parameters-close-btn">CLOSE</div>
-            <div>
-                <div class="setting">Flaggrotation (ms)</div><input type="text" class="settingFlaggrotation" onchange="changeCarouselSpeed(this.value)" />
-            </div>
-            <div>
-                <div class="setting">Blinkhastighet (ms)</div><input type="text" class="settingBlinkhastighet" onchange="changeBlinkSpeed(this.value)" />
-            </div>
-            <div>
-                <div class="setting">Antal skärmar</div><input type="text" class="settingAntalSkärmar" onchange="changeNumberOfScreens(this.value)" />
-            </div>
-            <div class="flag-attributes"></div>
-        </div>
-        <div class="start-light">
-            <div class="close" data-btn="start-light-close-btn">CLOSE</div>
-            <h2 class="">Startljus</h2>
-            <div class="group">
-                <span class="label hide-after-start">Antal minuter (0=ingen nedräkning)</span>
-                <input type="number" id="start-minutes" class="hide-after-start" value="0" onClick="this.select();"/>
-            </div>
-            <div class="group">
-                <span class="label hide-after-start">Informationstext</span>
-                <input type="text" id="start-infotext" class="text hide-after-start" onClick="this.select();"/>
-            </div>
-            <div class="race-function-btn btn hide-after-start" data-btn="start-intro-btn">Start Intro</div>
-            <div class="race-function-btn btn btn-green show-on-start" data-btn="start-btn">Start</div>
-            <div class="race-function-btn btn btn-green show-on-start" data-btn="rolling-start-btn">Rullande start</div>
-            <div class="race-function-btn btn btn-red show-on-start" data-btn="abort-start-btn">Avbryt start</div>
-            <div class="race-function-btn btn" data-btn="close-start-btn">Rensa startskärm</div>
+    <div id="control-screen">
+      <header>
+        <svg
+          class="track"
+          width="50"
+          viewBox="0 0 1083 931"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            class="path-track"
+            d="M513.869 593.712C482.269 598.912 380.703 644.212 333.869 666.212C268.703 695.545 126.069 759.212 76.8694 779.212C27.6694 799.212 20.0361 843.878 22.3694 863.712C24.2028 869.545 29.5694 884.512 36.3694 897.712C43.1694 910.912 60.8694 910.212 68.8694 908.212C138.703 883.712 284.669 832.312 309.869 822.712C341.369 810.712 345.869 809.712 370.869 772.712C401.369 714.212 477.369 711.712 500.869 732.712C519.669 749.512 540.703 744.712 548.869 740.212C701.203 685.545 1010.57 574.012 1029.37 565.212C1054.37 555.212 1066.37 524.212 1058.87 494.712C1052.87 471.112 1030.37 455.212 1019.87 450.212C1002.87 448.878 968.869 442.712 968.869 428.712C971.669 387.912 953.369 361.045 943.869 352.712C877.369 279.545 735.169 125.212 698.369 93.2117C661.569 61.2117 614.369 42.8783 595.369 37.7117L536.869 24.7117C498.869 14.7117 469.369 34.7117 457.869 46.7117C446.369 58.7117 252.869 311.712 227.369 346.212C192.61 395.524 205.179 466.943 241.369 497.212C273.105 523.755 325.546 512.785 345.869 506.712C389.369 493.712 560.869 428.712 560.869 428.712C686.369 389.712 678.869 523.212 607.369 550.212C582.671 559.538 553.369 587.212 513.869 593.712Z"
+            stroke="white"
+            stroke-width="43"
+          />
+        </svg>
 
-         </div>
-        <div class="screens-wrapper">
-            <div class="preview-screen-wrapper">
-                <div class="btn section-screen" data-btn="section-btn" data-section="0">
-                    <div class="carNum"></div>
-                    <div class="sectorLabel">0</div>
-                </div>
-            </div>
-            <div class="section-screens-wrapper">
-            </div>
-            <div class="race-functions-wrapper">
-                <div class="btn race-function-btn" data-btn="start-light-btn">Startljus</div>
-                <div class="btn race-function-btn" data-btn="main-screen-btn">Huvudskärm</div>
-                <div class="car-number-input">
-                    <span>Nummer</span>
-                    <input type="number" max="99" min="1"/>
-                </div>
-                <div>
-                    <div class="btn race-function-btn" data-btn="all-screens-btn">Alla skärmar</div>
-                </div>
-            </div>
+        <span class="clock">Getting time...</span>
+        <nav>
+          <div class="btn" data-btn="parameters-btn">
+            <svg
+              style="pointer-events: none"
+              height="30"
+              focusable="false"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              class=""
+            >
+              <path
+                fill="white"
+                d="M487.4 315.7l-42.6-24.6c4.3-23.2 4.3-47 0-70.2l42.6-24.6c4.9-2.8 7.1-8.6 5.5-14-11.1-35.6-30-67.8-54.7-94.6-3.8-4.1-10-5.1-14.8-2.3L380.8 110c-17.9-15.4-38.5-27.3-60.8-35.1V25.8c0-5.6-3.9-10.5-9.4-11.7-36.7-8.2-74.3-7.8-109.2 0-5.5 1.2-9.4 6.1-9.4 11.7V75c-22.2 7.9-42.8 19.8-60.8 35.1L88.7 85.5c-4.9-2.8-11-1.9-14.8 2.3-24.7 26.7-43.6 58.9-54.7 94.6-1.7 5.4.6 11.2 5.5 14L67.3 221c-4.3 23.2-4.3 47 0 70.2l-42.6 24.6c-4.9 2.8-7.1 8.6-5.5 14 11.1 35.6 30 67.8 54.7 94.6 3.8 4.1 10 5.1 14.8 2.3l42.6-24.6c17.9 15.4 38.5 27.3 60.8 35.1v49.2c0 5.6 3.9 10.5 9.4 11.7 36.7 8.2 74.3 7.8 109.2 0 5.5-1.2 9.4-6.1 9.4-11.7v-49.2c22.2-7.9 42.8-19.8 60.8-35.1l42.6 24.6c4.9 2.8 11 1.9 14.8-2.3 24.7-26.7 43.6-58.9 54.7-94.6 1.5-5.5-.7-11.3-5.6-14.1zM256 336c-44.1 0-80-35.9-80-80s35.9-80 80-80 80 35.9 80 80-35.9 80-80 80z"
+                class=""
+              ></path>
+            </svg>
+          </div>
+        </nav>
+      </header>
+      <div class="parameters">
+        <div class="close" data-btn="parameters-close-btn">CLOSE</div>
+        <div>
+          <div class="setting">Flaggrotation (ms)</div>
+          <input
+            type="text"
+            class="settingFlaggrotation"
+            onchange="changeCarouselSpeed(this.value)"
+          />
         </div>
-        
-        <div class="select-flag-wrapper">
-       </div>
+        <div>
+          <div class="setting">Blinkhastighet (ms)</div>
+          <input
+            type="text"
+            class="settingBlinkhastighet"
+            onchange="changeBlinkSpeed(this.value)"
+          />
+        </div>
+        <div>
+          <div class="setting">Antal skärmar</div>
+          <input
+            type="text"
+            class="settingAntalSkärmar"
+            onchange="changeNumberOfScreens(this.value)"
+          />
+        </div>
+        <div class="flag-attributes"></div>
+      </div>
+      <div class="start-light">
+        <div class="close" data-btn="start-light-close-btn">CLOSE</div>
+        <h2 class="">Startljus</h2>
+        <div class="group">
+          <span class="label hide-after-start">Informationstext</span>
+          <input
+            type="text"
+            id="start-infotext"
+            class="text hide-after-start"
+            onClick="this.select();"
+          />
+        </div>
+        <div class="group">
+          <span class="label hide-after-start"
+            >Nedräkning, minuter (0=ingen)</span
+          >
+          <input
+            type="number"
+            id="start-minutes"
+            class="hide-after-start"
+            value="0"
+            onClick="this.select();"
+          />
+        </div>
+        <div class="group">
+          <span class="label hide-after-start"
+            >Racelängd, minuter (valfri)</span
+          >
+          <input
+            type="number"
+            id="start-length"
+            class="hide-after-start"
+            value="0"
+            onClick="this.select();"
+          />
+        </div>
+        <div class="group">
+            <span class="label hide-after-start"
+              >Antal varv (valfri)</span
+            >
+            <input
+              type="number"
+              id="start-laps"
+              class="hide-after-start"
+              value="0"
+              onClick="this.select();"
+            />
+          </div>
+        <div
+          class="race-function-btn btn hide-after-start"
+          data-btn="start-intro-btn"
+        >
+          Start Intro
+        </div>
+        <div class="group-start">
+          <div
+            class="race-function-btn btn btn-green show-on-start"
+            data-btn="start-btn"
+          >
+            5 sek Start
+          </div>
+          <div
+            class="race-function-btn btn btn-green show-on-start"
+            data-btn="rolling-start-btn"
+          >
+            Rullande start
+          </div>
+        </div>
+        <div
+          class="race-function-btn btn btn-red show-on-start"
+          data-btn="abort-start-btn"
+        >
+          Avbryt start
+        </div>
+        <div class="race-function-btn btn" data-btn="close-start-btn">
+          Rensa startskärm
+        </div>
+      </div>
+      <div class="screens-wrapper">
+        <div class="preview-screen-wrapper">
+          <div
+            class="btn section-screen"
+            data-btn="section-btn"
+            data-section="0"
+          >
+            <div class="carNum"></div>
+            <div class="sectorLabel">0</div>
+          </div>
+        </div>
+        <div class="section-screens-wrapper"></div>
+        <div class="race-functions-wrapper">
+          <div class="btn race-function-btn" data-btn="start-light-btn">
+            Startljus
+          </div>
+          <div class="btn race-function-btn" data-btn="main-screen-btn">
+            Huvudskärm
+          </div>
+          <div class="car-number-input">
+            <span>Nummer</span>
+            <input type="number" max="99" min="1" />
+          </div>
+          <div>
+            <div class="btn race-function-btn" data-btn="all-screens-btn">
+              Alla skärmar
+            </div>
+          </div>
+          <div class="groupIdleSelection">
+            <input type="radio" id="localTime" name="idleShow" checked="checked">
+            <label for="localTime" class="btn race-function-btn" data-btn="idle-local-time-btn">Local Time</label>
+
+            <input type="radio" id="timeLeft" name="idleShow">
+            <label for="timeLeft" class="btn race-function-btn" data-btn="idle-time-left-btn">Time Left</label>
+
+            <input type="radio" id="lapsLeft" name="idleShow">
+            <label for="lapsLeft" class="btn race-function-btn" data-btn="idle-laps-left-btn">Laps Left</label>
+
+            <div class="pauseTimeLeft">
+                <span class="btn race-function-btn" data-btn="time-left-pause-btn">(Un)pause time</span>
+                <span class="btn race-function-btn time-left" style="background:none;color:black;">Time left: </span>
+            </div>
+            <div class="decreaseLapsLeft">
+                <span class="btn race-function-btn" data-btn="laps-left-decrease-btn">Decrease laps left</span>
+                <span class="btn race-function-btn laps-left" style="background:none;color:black">Laps left: </span>
+            </div>
+            
+          </div>
+      </div>
+
+      <div class="select-flag-wrapper"></div>
     </div>
 
     <script src="../kontroll.js"></script>
-</body>
+  </body>
 </html>
