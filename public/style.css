@@ -424,6 +424,18 @@ nav {
   display: flex;
   gap: 1rem;
 }
+.corner-race-display {
+  background: black;
+  color: white;
+  font-size: 3vw;
+  opacity: 0.8;
+  padding: 2% 5%;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  display: none;
+  z-index: 1;
+}
 .parameters {
   opacity: 0;
   transform: translateX(-100%);
@@ -605,7 +617,8 @@ svg.track {
 .flag-black {
   /* background-image: url("data:image/svg+xml,%3Csvg width='800' height='600' viewBox='0 0 800 600' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M479 0H0V600H479V0Z' fill='%23322C24'/%3E%3C/svg%3E%0A"); */
   /* background-image: url("data:image/svg+xml,%3Csvg width='800' height='600' viewBox='0 0 800 600' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0H800V600H0V0Z' fill='%23322C24'/%3E%3C/svg%3E%0A"); */
-  background-image: url("data:image/svg+xml,%3Csvg width='1924' height='1024' viewBox='0 0 1924 1024' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1924' height='1024' fill='white'/%3E%3Cpath d='M0 0H1924V1024H0V0Z' fill='black'/%3E%3C/svg%3E%0A");
+  /* background-image: url("data:image/svg+xml,%3Csvg width='1924' height='1024' viewBox='0 0 1924 1024' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1924' height='1024' fill='white'/%3E%3Cpath d='M0 0H1924V1024H0V0Z' fill='black'/%3E%3C/svg%3E%0A"); */
+  background-image: url("data:image/svg+xml,%3Csvg width='1924' height='1024' viewBox='0 0 1924 1024' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_2_3)'%3E%3Cpath d='M7.5 7.5H1916.5V1016.5H7.5V7.5Z' fill='black' stroke='white' stroke-width='15'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_2_3'%3E%3Crect width='1924' height='1024' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E%0A");
 }
 .flag-black-orange {
   /* background-image: url("data:image/svg+xml,%3Csvg width='800' height='600' viewBox='0 0 800 600' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M479 0H0V600H479V0Z' fill='%23322C24'/%3E%3Cpath d='M240 440C317.32 440 380 377.32 380 300C380 222.68 317.32 160 240 160C162.68 160 100 222.68 100 300C100 377.32 162.68 440 240 440Z' fill='%23FF8800'/%3E%3C/svg%3E%0A"); */
