@@ -146,10 +146,7 @@ function startFlagCarousel() {
     if (idleText == 'Time Left') {
     } else if (idleText == 'Laps Left') {
     }
-    if (
-      thisSection.flags?.find((el) => el.name == 'flag-finish') ||
-      idleText == 'Local Time'
-    ) {
+    if (idleText == 'Local Time') {
     } else {
     }
   }
