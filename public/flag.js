@@ -144,17 +144,13 @@ function startFlagCarousel() {
     dateDiv.innerText = ''
     titleDiv.innerText = ''
     if (idleText == 'Time Left') {
-      cornerDiv.innerText = `Time left: ${timeLeft}`
     } else if (idleText == 'Laps Left') {
-      cornerDiv.innerText = `Laps left: ${lapsLeft}`
     }
     if (
       thisSection.flags?.find((el) => el.name == 'flag-finish') ||
       idleText == 'Local Time'
     ) {
-      cornerDiv.style.display = 'none'
     } else {
-      cornerDiv.style.display = 'initial'
     }
   }
 
