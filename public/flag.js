@@ -113,10 +113,12 @@ function startFlagCarousel() {
   let carNumDiv = document.querySelector('.carNum')
   let titleDiv = document.querySelector('.flag-display-title')
   let dateDiv = document.querySelector('.flag-display-date')
+  let cornerDiv = document.querySelector('.corner-race-display')
 
   if (thisSection && thisSection.flags.length < 1) {
     displayDiv.className = 'flag-display'
     titleDiv.innerText = idleText
+    cornerDiv.style.display = 'none'
     if (idleText == 'Local Time') {
       dateDiv.innerText = `${Date().slice(16, 21)}`
     } else if (idleText == 'Time Left') {
@@ -141,6 +143,19 @@ function startFlagCarousel() {
     carNumDiv.innerText = alternatingFlag.number ? alternatingFlag.number : ''
     dateDiv.innerText = ''
     titleDiv.innerText = ''
+    if (idleText == 'Time Left') {
+      cornerDiv.innerText = `Time left: ${timeLeft}`
+    } else if (idleText == 'Laps Left') {
+      cornerDiv.innerText = `Laps left: ${lapsLeft}`
+    }
+    if (
+      thisSection.flags?.find((el) => el.name == 'flag-finish') ||
+      idleText == 'Local Time'
+    ) {
+      cornerDiv.style.display = 'none'
+    } else {
+      cornerDiv.style.display = 'initial'
+    }
   }
 
   carouselCounter++
