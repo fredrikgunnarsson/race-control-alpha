@@ -424,6 +424,18 @@ nav {
   display: flex;
   gap: 1rem;
 }
+.corner-race-display {
+  background: black;
+  color: white;
+  font-size: 3vw;
+  opacity: 0.8;
+  padding: 2% 5%;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  display: none;
+  z-index: 1;
+}
 .parameters {
   opacity: 0;
   transform: translateX(-100%);
