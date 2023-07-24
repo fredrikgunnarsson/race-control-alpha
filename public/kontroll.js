@@ -451,3 +451,10 @@ function isMainScreenSelected() {
 setInterval(() => {
   document.querySelector('.clock').innerText = Date().slice(0, 24)
 }, 1000)
+
+// ping for Heroku to stay alive
+setInterval(() => {
+  fetch(`${window.location.origin}/screens`)
+    .then((res) => res.text())
+    .then(console.log('ping'))
+}, 1000 * 60 * 10)
